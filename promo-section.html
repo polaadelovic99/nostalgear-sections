@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+
+
+        .promo-container {
+            width: 75%;
+            max-width: 1200px;
+            background-color: #EFEADD;
+            padding: 60px 40px;
+            box-sizing: border-box;
+            border-radius: 20px;
+            margin: 0 auto;
+        }
+
+        .promo-header {
+            text-align: center;
+            margin-bottom: 60px;
+            font-family: 'Genova', sans-serif;
+        }
+
+        .promo-title {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 400;
+            color: #000000;
+            margin: 0;
+            font-family: 'Genova', sans-serif;
+        }
+
+        .promo-subtitle {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 700;
+            color: #F75200;
+            font-style: italic;
+            margin: 0;
+            font-family: 'Genova', sans-serif;
+        }
+
+        .comparison-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            padding: 0 !important;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 300px;
+            max-width: 450px;
+            border-radius: 20px;
+            padding: 0 40px 40px 40px;
+            position: relative;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* AVANT Card */
+        .card-avant {
+            background-color: #F3EFE0; 
+            border: 2px solid black;
+            padding-top: 50px; /* Space for icon */
+        }
+
+        /* APRÈS Card */
+        .card-apres {
+            background: linear-gradient(90deg, #F75200 0%, #FF7300 18.75%, #FF7300 81.73%, #F75200 100%);
+            border: 2px solid #000000; 
+            padding-top: 50px;
+            box-shadow: 0 10px 30px rgba(255, 115, 0, 0.3);
+        }
+
+        .card-icon {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            background-color: white; /* Fallback */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Remove bg for SVG connection */
+        .card-icon svg {
+             width: 100%;
+             height: 100%;
+             display: block;
+        }
+
+        .card-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 40px 0 20px 0;
+            text-align: center;
+            font-family: 'Genova', sans-serif;
+        }
+
+        .card-avant .card-title {
+            color: black;
+            font-family: 'Genova', sans-serif;
+        }
+
+        .card-apres .card-title {
+            color: black;
+            font-family: 'Genova', sans-serif;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .feature-item {
+            padding: 15px 0;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 400;
+            border-bottom: 1.157px solid #000;
+            font-family: 'Genova', sans-serif;
+            color: #000000;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .promo-container {
+                width: 90%;
+                padding: 40px 20px;
+            }
+            
+            .promo-title, .promo-subtitle {
+                font-size: 2.5rem;
+            }
+
+            .card {
+                margin-top: 40px; /* Space for icon stacking */
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .promo-title, .promo-subtitle {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="promo-container">
+        
+        <div class="promo-header">
+            <h2 class="promo-title">Pourquoi payer 3500€<br>pour 70 consoles quand</h2>
+            <h2 class="promo-subtitle">une seule suffit ?</h2>
+        </div>
+
+        <div class="comparison-wrapper">
+            
+            <!-- AVANT Card -->
+            <div class="card card-avant">
+                <div class="card-icon">
+                   <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="61.9142" cy="61.9142" r="61.9142" fill="black"/>
+<path d="M18.5499 49.1589H23.6516V74.6672H18.5499V49.1589Z" fill="#F1E1C5"/>
+<path d="M23.6516 38.9555H28.7533V49.1589H23.6516V38.9555Z" fill="#F1E1C5"/>
+<path d="M28.7533 33.8539H33.8549V38.9555H28.7533V33.8539Z" fill="#F1E1C5"/>
+<path d="M33.8549 28.7522H38.9566V33.8539H33.8549V28.7522Z" fill="#F1E1C5"/>
+<path d="M38.9566 23.6506H49.1599V28.7522H38.9566V23.6506Z" fill="#F1E1C5"/>
+<path d="M49.1599 18.5489H74.6682V23.6506H49.1599V18.5489Z" fill="#F1E1C5"/>
+<path d="M74.6682 23.6506H84.8715V28.7522H74.6682V23.6506Z" fill="#F1E1C5"/>
+<path d="M84.8715 28.7522H89.9731V33.8539H84.8715V28.7522Z" fill="#F1E1C5"/>
+<path d="M89.9731 33.8539H95.0748V38.9555H89.9731V33.8539Z" fill="#F1E1C5"/>
+<path d="M95.0748 38.9555H100.176V49.1589H95.0748V38.9555Z" fill="#F1E1C5"/>
+<path d="M100.176 49.1589H105.278V74.6672H100.176V49.1589Z" fill="#F1E1C5"/>
+<path d="M23.6516 74.6672H28.7533V84.8705H23.6516V74.6672Z" fill="#F1E1C5"/>
+<path d="M95.0748 74.6672H100.176V84.8705H95.0748V74.6672Z" fill="#F1E1C5"/>
+<path d="M89.9731 84.8705H95.0748V89.9721H89.9731V84.8705Z" fill="#F1E1C5"/>
+<path d="M84.8715 89.9721H89.9731V95.0738H84.8715V89.9721Z" fill="#F1E1C5"/>
+<path d="M44.0582 74.6672H49.1599V79.7688H44.0582V74.6672Z" fill="#F1E1C5"/>
+<path d="M38.9566 79.7688H44.0582V84.8705H38.9566V79.7688Z" fill="#F1E1C5"/>
+<path d="M79.7698 79.7688H84.8715V84.8705H79.7698V79.7688Z" fill="#F1E1C5"/>
+<path d="M74.6682 74.6672H79.7698V79.7688H74.6682V74.6672Z" fill="#F1E1C5"/>
+<path d="M74.6682 49.1589H79.7698V59.3622H74.6682V49.1589Z" fill="#F1E1C5"/>
+<path d="M44.0582 49.1589H49.1599V59.3622H44.0582V49.1589Z" fill="#F1E1C5"/>
+<path d="M33.8549 89.9721H38.9566V95.0738H33.8549V89.9721Z" fill="#F1E1C5"/>
+<path d="M38.9566 95.0738H49.1599V100.175H38.9566V95.0738Z" fill="#F1E1C5"/>
+<path d="M49.1599 100.175H74.6682V105.277H49.1599V100.175Z" fill="#F1E1C5"/>
+<path d="M49.1599 69.5655H74.6682V74.6672H49.1599V69.5655Z" fill="#F1E1C5"/>
+<path d="M28.7533 84.8705H33.8549V89.9721H28.7533V84.8705Z" fill="#F1E1C5"/>
+<path d="M74.6682 95.0738H84.8715V100.175H74.6682V95.0738Z" fill="#F1E1C5"/>
+</svg>
+                </div>
+                <h3 class="card-title">AVANT</h3>
+                <ul class="feature-list">
+                    <li class="feature-item">70 consoles partout</li>
+                    <li class="feature-item">3500€ minimum</li>
+                    <li class="feature-item">Configuration 2h</li>
+                    <li class="feature-item">Cartouches à +50€</li>
+                    <li class="feature-item">Pixels flous</li>
+                    <li class="feature-item">Pas de sauvegardes</li>
+                </ul>
+            </div>
+
+            <!-- APRÈS Card -->
+            <div class="card card-apres">
+                <div class="card-icon">
+                    <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="61.9106" cy="61.9106" r="61.9106" fill="black"/>
+<path d="M18.5488 49.156H23.6501V74.6628H18.5488V49.156Z" fill="#FF7300"/>
+<path d="M23.6501 38.9533H28.7515V49.156H23.6501V38.9533Z" fill="#FF7300"/>
+<path d="M28.7515 33.852H33.8528V38.9533H28.7515V33.852Z" fill="#FF7300"/>
+<path d="M33.8528 28.7506H38.9542V33.852H33.8528V28.7506Z" fill="#FF7300"/>
+<path d="M38.9542 23.6492H49.1569V28.7506H38.9542V23.6492Z" fill="#FF7300"/>
+<path d="M49.1569 18.5479H74.6637V23.6492H49.1569V18.5479Z" fill="#FF7300"/>
+<path d="M74.6637 23.6492H84.8664V28.7506H74.6637V23.6492Z" fill="#FF7300"/>
+<path d="M84.8664 28.7506H89.9678V33.852H84.8664V28.7506Z" fill="#FF7300"/>
+<path d="M89.9678 33.852H95.0691V38.9533H89.9678V33.852Z" fill="#FF7300"/>
+<path d="M95.0691 38.9533H100.17V49.156H95.0691V38.9533Z" fill="#FF7300"/>
+<path d="M100.17 49.156H105.272V74.6628H100.17V49.156Z" fill="#FF7300"/>
+<path d="M23.6501 74.6628H28.7515V84.8655H23.6501V74.6628Z" fill="#FF7300"/>
+<path d="M95.0691 74.6628H100.17V84.8655H95.0691V74.6628Z" fill="#FF7300"/>
+<path d="M89.9678 84.8655H95.0691V89.9669H89.9678V84.8655Z" fill="#FF7300"/>
+<path d="M84.8664 89.9669H89.9678V95.0683H84.8664V89.9669Z" fill="#FF7300"/>
+<path d="M44.0556 74.6628H49.1569V79.7642H44.0556V74.6628Z" fill="#FF7300"/>
+<path d="M38.9542 69.5615H44.0556V74.6628H38.9542V69.5615Z" fill="#FF7300"/>
+<path d="M79.7651 69.5615H84.8664V74.6628H79.7651V69.5615Z" fill="#FF7300"/>
+<path d="M74.6637 74.6628H79.7651V79.7642H74.6637V74.6628Z" fill="#FF7300"/>
+<path d="M74.6637 49.156H79.7651V59.3587H74.6637V49.156Z" fill="#FF7300"/>
+<path d="M44.0556 49.156H49.1569V59.3587H44.0556V49.156Z" fill="#FF7300"/>
+<path d="M33.8528 89.9669H38.9542V95.0683H33.8528V89.9669Z" fill="#FF7300"/>
+<path d="M38.9542 95.0683H49.1569V100.17H38.9542V95.0683Z" fill="#FF7300"/>
+<path d="M49.1569 100.17H74.6637V105.271H49.1569V100.17Z" fill="#FF7300"/>
+<path d="M49.1569 79.7642H74.6637V84.8655H49.1569V79.7642Z" fill="#FF7300"/>
+<path d="M28.7515 84.8655H33.8528V89.9669H28.7515V84.8655Z" fill="#FF7300"/>
+<path d="M74.6637 95.0683H84.8664V100.17H74.6637V95.0683Z" fill="#FF7300"/>
+</svg>
+                </div>
+                <h3 class="card-title">APRÈS</h3>
+                <ul class="feature-list">
+                    <li class="feature-item">1 console élégante</li>
+                    <li class="feature-item">199.99€ tout inclus</li>
+                    <li class="feature-item">Installation 30sec</li>
+                    <li class="feature-item">20 000 jeux inclus</li>
+                    <li class="feature-item">Upscaling 4K auto</li>
+                    <li class="feature-item">Safe instantané</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

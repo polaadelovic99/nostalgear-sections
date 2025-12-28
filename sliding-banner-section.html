@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+
+        .sliding-banner-section {
+            position: relative;
+            width: 100vw;
+            max-width: 100vw;
+            background-color: #8D1739;
+            overflow: hidden;
+            padding: 10px 0;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            left: 0;
+            right: 0;
+            box-sizing: border-box;
+        }
+
+        /* Alternative approach if parent has padding - uncomment if needed */
+        /* 
+        .sliding-banner-section {
+            position: relative;
+            width: 100vw;
+            max-width: none;
+            background-color: #8D1739;
+            overflow: hidden;
+            padding: 10px 0;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
+            left: 0;
+            right: 0;
+        }
+        */
+
+        .banner-container {
+            position: relative;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        .banner-track {
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+            will-change: transform;
+        }
+
+        /* Large screens: Show all 3 items side by side */
+        .banner-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px 40px;
+            flex-shrink: 0;
+        }
+
+        /* Large screens layout */
+        @media (min-width: 1024px) {
+            .banner-track {
+                justify-content: center;
+                gap: 60px;
+            }
+
+            .banner-slide {
+                min-width: auto;
+                flex: 0 0 auto;
+                width: auto;
+            }
+        }
+
+        /* Smaller screens: Slider mode */
+        @media (max-width: 1023px) {
+            .banner-track {
+                justify-content: flex-start;
+            }
+
+            .banner-slide {
+                min-width: 100%;
+                width: 100%;
+            }
+        }
+
+        .banner-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .banner-text {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            white-space: nowrap;
+        }
+
+        /* Navigation dots - hidden by default, shown only in slider mode */
+        .banner-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        /* Show dots only in slider mode */
+        .banner-dots.slider-mode {
+            display: flex;
+        }
+
+        .banner-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border: none;
+            padding: 0;
+        }
+
+        .banner-dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+
+        .banner-dot:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .banner-slide {
+                padding: 12px 20px;
+                gap: 12px;
+            }
+
+            .banner-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .banner-text {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .banner-slide {
+                padding: 10px 15px;
+                gap: 10px;
+            }
+
+            .banner-icon {
+                width: 28px;
+                height: 28px;
+            }
+
+            .banner-text {
+                font-size: 12px;
+                letter-spacing: 0.3px;
+            }
+
+            .banner-dots {
+                bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="sliding-banner-section">
+        <div class="banner-container">
+            <div class="banner-track" id="bannerTrack">
+                <!-- Slide 1: Fast Delivery -->
+                <div class="banner-slide">
+                    <div class="banner-icon" id="icon1">
+                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.7959 39.4559C12.741 39.4559 10.9942 38.7366 9.55571 37.2981C8.11722 35.8596 7.39797 34.1129 7.39797 32.0579H1.233L2.34269 27.1259H9.30912C10.0078 26.345 10.8298 25.7388 11.7751 25.3072C12.7204 24.8757 13.7273 24.6599 14.7959 24.6599C15.8645 24.6599 16.8715 24.8757 17.8168 25.3072C18.7621 25.7388 19.5841 26.345 20.2828 27.1259H30.5783L35.7569 4.93198H13.6862L14.7343 0H41.9218L39.6408 9.86396H46.8538L54.2518 19.7279L51.7858 32.0579H46.8538C46.8538 34.1129 46.1346 35.8596 44.6961 37.2981C43.2576 38.7366 41.5108 39.4559 39.4559 39.4559C37.4009 39.4559 35.6541 38.7366 34.2156 37.2981C32.7771 35.8596 32.0579 34.1129 32.0579 32.0579H22.1939C22.1939 34.1129 21.4747 35.8596 20.0362 37.2981C18.5977 38.7366 16.8509 39.4559 14.7959 39.4559ZM36.8049 22.1939H48.7033L48.9499 20.8993L44.3878 14.7959H38.5311L36.8049 22.1939ZM35.7569 4.93198L30.5783 27.1259L30.7016 26.6943L35.7569 4.93198ZM6.16498 22.1939V14.7959H0L8.63097 2.46599V9.86396H14.7959L6.16498 22.1939ZM14.7959 34.5239C15.4946 34.5239 16.0803 34.2875 16.553 33.8149C17.0256 33.3423 17.2619 32.7566 17.2619 32.0579C17.2619 31.3592 17.0256 30.7735 16.553 30.3009C16.0803 29.8282 15.4946 29.5919 14.7959 29.5919C14.0972 29.5919 13.5116 29.8282 13.0389 30.3009C12.5663 30.7735 12.33 31.3592 12.33 32.0579C12.33 32.7566 12.5663 33.3423 13.0389 33.8149C13.5116 34.2875 14.0972 34.5239 14.7959 34.5239ZM39.4559 34.5239C40.1545 34.5239 40.7402 34.2875 41.2129 33.8149C41.6855 33.3423 41.9218 32.7566 41.9218 32.0579C41.9218 31.3592 41.6855 30.7735 41.2129 30.3009C40.7402 29.8282 40.1545 29.5919 39.4559 29.5919C38.7572 29.5919 38.1715 29.8282 37.6988 30.3009C37.2262 30.7735 36.9899 31.3592 36.9899 32.0579C36.9899 32.7566 37.2262 33.3423 37.6988 33.8149C38.1715 34.2875 38.7572 34.5239 39.4559 34.5239Z" fill="white"/>
+                        </svg>                            
+                    </div>
+                    <div class="banner-text">LIVRAISON RAPIDE 3-5 JOURS</div>
+                </div>
+
+                <!-- Slide 2: Lifetime Warranty -->
+                <div class="banner-slide">
+                    <div class="banner-icon" id="icon2">
+                        <svg width="40" height="50" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.1386 33.4142L31.0715 19.4813L27.5574 15.9673L17.1386 26.3861L11.9601 21.2075L8.44602 24.7216L17.1386 33.4142ZM19.7279 49.3198C14.015 47.8813 9.29884 44.6036 5.5793 39.4867C1.85977 34.3697 0 28.6877 0 22.4405V7.39797L19.7279 0L39.4559 7.39797V22.4405C39.4559 28.6877 37.5961 34.3697 33.8765 39.4867C30.157 44.6036 25.4408 47.8813 19.7279 49.3198ZM19.7279 44.1412C24.0023 42.7849 27.5369 40.0723 30.3317 36.0035C33.1265 31.9346 34.5239 27.4136 34.5239 22.4405V10.7887L19.7279 5.24023L4.93198 10.7887V22.4405C4.93198 27.4136 6.32938 31.9346 9.12417 36.0035C11.919 40.0723 15.4535 42.7849 19.7279 44.1412Z" fill="white"/>
+                            </svg>
+                            
+                    </div>
+                    <div class="banner-text">GARANTIE À VIE</div>
+                </div>
+
+                <!-- Slide 3: 2-Year Warranty -->
+                <div class="banner-slide">
+                    <div class="banner-icon" id="icon3">
+                        <svg width="59" height="54" viewBox="0 0 59 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.92641 47.9581V22.9799L3.1306 26.6434L0 22.447L29.2411 0L58.5488 22.3804L55.3516 26.6434L29.2411 6.66085L13.2551 18.9168V42.6294H21.2481V47.9581H7.92641ZM37.0343 53.2868L25.7775 41.9633L29.5075 38.1666L37.0343 45.6934L52.1544 30.6399L55.8845 34.4366L37.0343 53.2868Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="banner-text">GARANTIE 2 ANS</div>
+                </div>
+            </div>
+
+            <!-- Navigation dots -->
+            <div class="banner-dots" id="bannerDots">
+                <button class="banner-dot active" data-slide="0" aria-label="Slide 1"></button>
+                <button class="banner-dot" data-slide="1" aria-label="Slide 2"></button>
+                <button class="banner-dot" data-slide="2" aria-label="Slide 3"></button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        class SlidingBanner {
+            constructor() {
+                this.track = document.getElementById('bannerTrack');
+                this.dots = document.querySelectorAll('.banner-dot');
+                this.slides = document.querySelectorAll('.banner-slide');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+                this.autoSlideInterval = null;
+                this.autoSlideDelay = 4000; // 4 seconds
+                this.isPaused = false;
+                this.isSliderMode = false;
+
+                this.init();
+            }
+
+            checkScreenSize() {
+                // Check if we're in slider mode (screens smaller than 1024px)
+                const wasSliderMode = this.isSliderMode;
+                this.isSliderMode = window.innerWidth < 1024;
+
+                // Update dots visibility based on mode
+                this.updateDotsVisibility();
+
+                // If mode changed, reset
+                if (wasSliderMode !== this.isSliderMode) {
+                    if (this.isSliderMode) {
+                        // Entered slider mode
+                        this.startAutoSlide();
+                        this.updateSlide();
+                    } else {
+                        // Entered desktop mode - show all items
+                        this.stopAutoSlide();
+                        this.track.style.transform = 'translateX(0)';
+                        this.currentSlide = 0;
+                        this.updateDots();
+                    }
+                }
+            }
+
+            updateDotsVisibility() {
+                const dotsContainer = document.getElementById('bannerDots');
+                if (dotsContainer) {
+                    if (this.isSliderMode) {
+                        // Show dots in slider mode (elements are hidden)
+                        dotsContainer.classList.add('slider-mode');
+                    } else {
+                        // Hide dots in desktop mode (all elements visible)
+                        dotsContainer.classList.remove('slider-mode');
+                    }
+                }
+            }
+
+            ensureFullWidth() {
+                const bannerSection = document.querySelector('.sliding-banner-section');
+                if (!bannerSection) return;
+
+                // Get viewport width
+                const viewportWidth = window.innerWidth;
+                
+                // Get the banner's current position and parent
+                const rect = bannerSection.getBoundingClientRect();
+                const parent = bannerSection.parentElement;
+                
+                if (parent) {
+                    const parentRect = parent.getBoundingClientRect();
+                    const parentLeft = parentRect.left;
+                    const parentRight = window.innerWidth - parentRect.right;
+                    
+                    // Calculate negative margins to break out of container
+                    const marginLeft = -parentLeft;
+                    const marginRight = -(window.innerWidth - parentRect.right);
+                    
+                    bannerSection.style.marginLeft = marginLeft + 'px';
+                    bannerSection.style.marginRight = marginRight + 'px';
+                    bannerSection.style.width = viewportWidth + 'px';
+                    bannerSection.style.maxWidth = viewportWidth + 'px';
+                }
+            }
+
+            init() {
+                // Ensure full width first
+                this.ensureFullWidth();
+                
+                // Check initial screen size and set dots visibility
+                this.checkScreenSize();
+                this.updateDotsVisibility();
+
+                // Set up dot navigation
+                this.dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        if (this.isSliderMode) {
+                            this.goToSlide(index);
+                        }
+                    });
+                });
+
+                // Pause on hover (only in slider mode)
+                const bannerSection = document.querySelector('.sliding-banner-section');
+                if (bannerSection) {
+                    bannerSection.addEventListener('mouseenter', () => {
+                        if (this.isSliderMode) {
+                            this.pause();
+                        }
+                    });
+                    bannerSection.addEventListener('mouseleave', () => {
+                        if (this.isSliderMode) {
+                            this.resume();
+                        }
+                    });
+                }
+
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    this.ensureFullWidth();
+                    this.checkScreenSize();
+                });
+
+                // Handle visibility change (pause when tab is hidden)
+                document.addEventListener('visibilitychange', () => {
+                    if (this.isSliderMode) {
+                        if (document.hidden) {
+                            this.pause();
+                        } else {
+                            this.resume();
+                        }
+                    }
+                });
+            }
+
+            goToSlide(index) {
+                if (!this.isSliderMode || index < 0 || index >= this.totalSlides) return;
+
+                this.currentSlide = index;
+                this.updateSlide();
+                this.updateDots();
+                this.resetAutoSlide();
+            }
+
+            nextSlide() {
+                if (!this.isSliderMode) return;
+                this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+                this.updateSlide();
+                this.updateDots();
+            }
+
+            prevSlide() {
+                if (!this.isSliderMode) return;
+                this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+                this.updateSlide();
+                this.updateDots();
+            }
+
+            updateSlide() {
+                if (!this.isSliderMode) {
+                    // Desktop mode - no transform needed
+                    this.track.style.transform = 'translateX(0)';
+                    return;
+                }
+                // Slider mode - apply transform
+                const translateX = -this.currentSlide * 100;
+                this.track.style.transform = `translateX(${translateX}%)`;
+            }
+
+            updateDots() {
+                this.dots.forEach((dot, index) => {
+                    if (index === this.currentSlide) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            startAutoSlide() {
+                if (!this.isSliderMode) return;
+                
+                if (this.autoSlideInterval) {
+                    clearInterval(this.autoSlideInterval);
+                }
+
+                this.autoSlideInterval = setInterval(() => {
+                    if (!this.isPaused && this.isSliderMode) {
+                        this.nextSlide();
+                    }
+                }, this.autoSlideDelay);
+            }
+
+            stopAutoSlide() {
+                if (this.autoSlideInterval) {
+                    clearInterval(this.autoSlideInterval);
+                    this.autoSlideInterval = null;
+                }
+            }
+
+            pause() {
+                this.isPaused = true;
+            }
+
+            resume() {
+                this.isPaused = false;
+            }
+
+            resetAutoSlide() {
+                if (this.isSliderMode) {
+                    this.startAutoSlide();
+                }
+            }
+
+            // Method to update SVG icons
+            updateIcon(slideIndex, svgCode) {
+                const iconElement = document.getElementById(`icon${slideIndex + 1}`);
+                if (iconElement) {
+                    iconElement.innerHTML = svgCode;
+                }
+            }
+        }
+
+        // Initialize banner when DOM is ready
+        let banner;
+        function initBanner() {
+            banner = new SlidingBanner();
+            // Re-ensure full width after a short delay to handle dynamic content
+            setTimeout(() => {
+                if (banner && banner.ensureFullWidth) {
+                    banner.ensureFullWidth();
+                }
+            }, 100);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBanner);
+        } else {
+            initBanner();
+        }
+
+        // Also ensure full width on window load
+        window.addEventListener('load', () => {
+            if (banner && banner.ensureFullWidth) {
+                banner.ensureFullWidth();
+            }
+        });
+
+        // Export banner instance for external use (e.g., to update icons)
+        window.slidingBanner = banner;
+    </script>
+</body>
+</html>

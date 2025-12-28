@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+
+        .tv-comparison-section {
+            position: relative;
+            width: 100%;
+            max-width: 1920px;
+            margin: 0 auto;
+            background: transparent;
+            overflow: hidden; /* Hide overflow on the section */
+        }
+
+        /* Frame Container */
+        .frame-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio - adjust based on your PNG */
+            background-color: transparent;
+            overflow: hidden;
+        }
+
+        /* Video Wrapper - Contains both videos behind the frame (first layer) */
+        .videos-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden; /* Hide any overflow from videos */
+        }
+
+        /* Frame Overlay - PNG frame on top of videos */
+        .frame-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://sub.nostalgear.fr/wp-content/uploads/2025/12/Group-29-1.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 10;
+            pointer-events: none; /* Allow clicks to pass through to videos/play button */
+        }
+
+        /* Video Sizing Variables - Adjust these to resize videos */
+        :root {
+            --video-width: 100%; /* Adjust this percentage to make videos smaller (e.g., 90%, 85%) */
+            --video-height: 100%; /* Adjust this percentage to reduce height (e.g., 90%, 80%) */
+        }
+
+        /* Left Video Container - 50% of frame */
+        .video-container-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            overflow: hidden !important; /* Force hide overflow */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: inset(0 0 0 0); /* Clip to container bounds */
+        }
+
+        /* Right Video Container - 50% of frame */
+        .video-container-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            overflow: hidden !important; /* Force hide overflow */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: inset(0 0 0 0); /* Clip to container bounds */
+        }
+
+        /* Left Video - Shows 50% (left half of video) */
+        .video-left {
+    position: relative;
+    width: var(--video-width);
+    height: var(--video-height);
+    max-width: 70% !important;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    aspect-ratio: 16 / 9;
+    margin: 0 0 0 auto !important;
+}
+
+        /* Right Video - Shows 50% (right half of video) */
+        .video-right {
+    position: relative;
+    width: var(--video-width);
+    height: var(--video-height);
+    max-width: 70% !important;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto 0 0 !important;
+}
+
+        /* Vintage TV Filter Effect (optional - remove if not needed) */
+        .video-right {
+            filter: contrast(1.2) brightness(0.9) saturate(0.8);
+        }
+
+        /* Play Button - Centered Overlay */
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            z-index: 20; /* Above frame overlay */
+            transition: transform 0.2s, opacity 0.3s;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: transparent;
+        }
+
+        .play-button:active {
+            transform: translate(-50%, -50%) scale(0.95);
+            background: transparent;
+        }
+
+        .play-button:focus {
+            background: transparent;
+            outline: none;
+        }
+
+        .play-button.playing {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Play Button SVG */
+        .play-button svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .play-button {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .play-button {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="tv-comparison-section">
+        <div class="frame-container">
+            <!-- Videos Wrapper - Videos behind the frame -->
+            <div class="videos-wrapper">
+                <!-- Left Video (50% of frame) -->
+                <div class="video-container-left">
+                    <video class="video-left" id="videoLeft" muted loop playsinline>
+                        <!-- Replace with your left video URL (supports .mp4, .webm, .ogg, or any video URL) -->
+                        <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" type="video/mp4">
+                        <!-- Alternative: You can also use src attribute directly: <video src="your-video-url.mp4"> -->
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <!-- Right Video (50% of frame) -->
+                <div class="video-container-right">
+                    <video class="video-right" id="videoRight" muted loop playsinline>
+                        <!-- Replace with your right video URL (supports .mp4, .webm, .ogg, or any video URL) -->
+                        <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4" type="video/mp4">
+                        <!-- Alternative: You can also use src attribute directly: <video src="your-video-url.mp4"> -->
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Frame Overlay - PNG frame on top of videos -->
+            <div class="frame-overlay"></div>
+
+            <!-- Play Button Overlay -->
+            <button class="play-button" id="playButton" aria-label="Play video">
+                <svg width="182" height="182" viewBox="0 0 182 182" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="90.8621" cy="90.8621" r="88.3621" fill="white" stroke="#EA0F09" stroke-width="5"/>
+                    <path d="M122.574 111.726H110.031V125.424H97.3188V139.276H84.6069V139.275H72.6948V112.545H85.4067V125.422H97.3179V111.568H109.862V97.8711H122.574V111.726ZM72.6938 114.489H59.9819V66.0146H72.6938V114.489ZM135.455 97.873H122.743V84.2705H135.455V97.873ZM122.744 84.0156H110.032V70.1602H122.744V84.0156ZM97.3188 56.3066H110.031V70.1611H97.3179V56.3066H85.4067V69.1348H72.6948V42.4521H84.6069V42.4512H97.3188V56.3066Z" fill="#EA0F09"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <script>
+        const playButton = document.getElementById('playButton');
+        const videoLeft = document.getElementById('videoLeft');
+        const videoRight = document.getElementById('videoRight');
+
+        // Set video URLs (you can use local files or remote URLs)
+        // Option 1: Set URLs directly in HTML source tags above
+        // Option 2: Set URLs programmatically here:
+        
+        // Uncomment and add your video URLs:
+        // videoLeft.src = 'https://your-video-url.com/left-video.mp4';
+        // videoRight.src = 'https://your-video-url.com/right-video.mp4';
+        
+        // Or use the source element:
+        // const sourceLeft = videoLeft.querySelector('source');
+        // const sourceRight = videoRight.querySelector('source');
+        // if (sourceLeft) sourceLeft.src = 'https://your-video-url.com/left-video.mp4';
+        // if (sourceRight) sourceRight.src = 'https://your-video-url.com/right-video.mp4';
+        // videoLeft.load(); // Reload video after changing source
+        // videoRight.load();
+
+        // Play button click handler
+        playButton.addEventListener('click', function() {
+            // Play both videos simultaneously
+            const playPromise1 = videoLeft.play();
+            const playPromise2 = videoRight.play();
+
+            // Handle promise rejection (autoplay policies)
+            if (playPromise1 !== undefined) {
+                playPromise1
+                    .then(() => {
+                        // Video playing
+                    })
+                    .catch(error => {
+                        console.log('Left video autoplay prevented:', error);
+                    });
+            }
+
+            if (playPromise2 !== undefined) {
+                playPromise2
+                    .then(() => {
+                        // Video playing
+                    })
+                    .catch(error => {
+                        console.log('Right video autoplay prevented:', error);
+                    });
+            }
+
+            // Hide play button
+            playButton.classList.add('playing');
+        });
+
+        // Pause both videos when clicking on the video area
+        videoLeft.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!videoLeft.paused) {
+                videoLeft.pause();
+                videoRight.pause();
+                playButton.classList.remove('playing');
+            }
+        });
+
+        videoRight.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!videoRight.paused) {
+                videoLeft.pause();
+                videoRight.pause();
+                playButton.classList.remove('playing');
+            }
+        });
+
+        // Show play button again when videos end (if not looping)
+        videoLeft.addEventListener('ended', function() {
+            if (!videoLeft.loop) {
+                playButton.classList.remove('playing');
+            }
+        });
+
+        videoRight.addEventListener('ended', function() {
+            if (!videoRight.loop) {
+                playButton.classList.remove('playing');
+            }
+        });
+
+        // Optional: Keyboard support (Space bar to play/pause)
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' && e.target === document.body) {
+                e.preventDefault();
+                if (videoLeft.paused) {
+                    playButton.click();
+                } else {
+                    videoLeft.pause();
+                    videoRight.pause();
+                    playButton.classList.remove('playing');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

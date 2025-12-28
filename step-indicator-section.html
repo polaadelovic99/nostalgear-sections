@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+
+        .step-indicator-section {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0px 20px;
+            background-color: transparent;
+        }
+
+        .steps-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 600px;
+            padding: 30px 0;
+        }
+
+        /* Vertical connector line */
+        .connector-line {
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            background-color: #000;
+            transform: translateX(-50%);
+            z-index: 1;
+            display: block;
+        }
+
+        /* Individual step wrapper */
+        .step-item {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            z-index: 2;
+            min-height: 80px;
+            margin: 0;
+        }
+
+        /* Step 1 - positioned at top */
+        .step-item[data-step="1"] {
+            margin-top: 0;
+        }
+
+        /* Step 2 - positioned in middle */
+        .step-item[data-step="2"] {
+            flex: 1;
+        }
+
+        /* Step 3 - positioned at bottom */
+        .step-item[data-step="3"] {
+            margin-bottom: 0;
+        }
+
+        /* Step dot - centered on the line */
+        .step-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            z-index: 3;
+        }
+
+        /* Active state - dark red fill with white number */
+        .step-dot.active {
+            background-color: #8D1739;
+            color: white;
+            border: none;
+        }
+
+        /* Inactive state - white fill with black outline */
+        .step-dot.inactive {
+            background-color: #EFEADD;
+            color: #000;
+            border: 2px solid #000;
+        }
+
+        /* Step text */
+        .step-text {
+    position: absolute;
+    font-size: 50px;
+    line-height: 1;
+    color: #000;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Genova';
+}
+
+        /* Text on right side */
+        .step-item.right-text .step-text {
+            left: calc(60% + 40px);
+            text-align: left;
+        }
+
+        /* Text on left side */
+        .step-item.left-text .step-text {
+            right: calc(60% + 40px);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .step-indicator-section {
+                padding: 40px 15px;
+            }
+
+            .steps-container {
+                gap: 60px;
+            }
+
+            .step-dot {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .step-text {
+                font-size: 16px;
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .step-text {
+                position: relative;
+                left: auto !important;
+                right: auto !important;
+                top: auto;
+                transform: none;
+                margin-top: 15px;
+                text-align: center !important;
+            }
+
+            .step-item {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .step-dot {
+                position: relative;
+                left: auto;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="step-indicator-section" id="stepSection">
+        <div class="connector-line"></div>
+        <div class="steps-container">
+            <!-- Step 1: Active by default, text on right -->
+            <div class="step-item right-text" data-step="1">
+                <div class="step-dot active" id="stepDot1">1</div>
+                <div class="step-text">Branchez</div>
+            </div>
+
+            <!-- Step 2: Inactive, text on left -->
+            <div class="step-item left-text" data-step="2">
+                <div class="step-dot inactive" id="stepDot2">2</div>
+                <div class="step-text">Choisissez<br>parmi 20 000<br>classiques</div>
+            </div>
+
+            <!-- Step 3: Inactive, text on right -->
+            <div class="step-item right-text" data-step="3">
+                <div class="step-dot inactive" id="stepDot3">3</div>
+                <div class="step-text">Jouez</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Get all step elements
+        const stepSection = document.getElementById('stepSection');
+        const stepItems = document.querySelectorAll('.step-item');
+        const stepDots = document.querySelectorAll('.step-dot');
+
+        // Function to update active step based on scroll position
+        function updateActiveStep() {
+            if (!stepSection || stepItems.length === 0) return;
+            
+            // Get viewport middle position
+            const viewportMiddle = window.scrollY + (window.innerHeight / 2);
+            
+            // Get section position relative to document
+            const sectionRect = stepSection.getBoundingClientRect();
+            const sectionTop = window.scrollY + sectionRect.top;
+            const sectionBottom = sectionTop + sectionRect.height;
+            
+            // Check if we're within the section
+            if (viewportMiddle < sectionTop) {
+                // Before section - all inactive except step 1 should be active by default
+                stepDots.forEach((dot, index) => {
+                    if (index === 0) {
+                        dot.classList.add('active');
+                        dot.classList.remove('inactive');
+                    } else {
+                        dot.classList.remove('active');
+                        dot.classList.add('inactive');
+                    }
+                });
+                return;
+            }
+            
+            if (viewportMiddle > sectionBottom) {
+                // After section - all active
+                stepDots.forEach(dot => {
+                    dot.classList.add('active');
+                    dot.classList.remove('inactive');
+                });
+                return;
+            }
+            
+            // Within section - determine which step should be active
+            let activeStepIndex = -1;
+            
+            stepItems.forEach((item, index) => {
+                const stepNumber = index + 1;
+                const stepDot = document.getElementById(`stepDot${stepNumber}`);
+                
+                if (!stepDot) return;
+                
+                // Get step position relative to document
+                const itemRect = item.getBoundingClientRect();
+                const itemTop = window.scrollY + itemRect.top;
+                const itemCenter = itemTop + (itemRect.height / 2);
+                
+                // Check if viewport middle has passed this step's center
+                // Use a threshold to make activation smoother
+                const threshold = 100; // pixels before center to activate
+                
+                if (viewportMiddle >= itemCenter - threshold) {
+                    // This step has been reached
+                    activeStepIndex = index;
+                    stepDot.classList.add('active');
+                    stepDot.classList.remove('inactive');
+                } else {
+                    // This step hasn't been reached yet
+                    stepDot.classList.remove('active');
+                    stepDot.classList.add('inactive');
+                }
+            });
+            
+            // Ensure step 1 is active if we're at the top of the section
+            if (activeStepIndex === -1 && viewportMiddle >= sectionTop) {
+                const stepDot1 = document.getElementById('stepDot1');
+                if (stepDot1) {
+                    stepDot1.classList.add('active');
+                    stepDot1.classList.remove('inactive');
+                }
+            }
+        }
+
+        // Update on scroll with throttling
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateActiveStep();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        
+        // Also listen for scroll on the document and window
+        function handleScroll() {
+            onScroll();
+        }
+
+        // Function to update connector line position
+        function updateConnectorLine() {
+            const connectorLine = document.querySelector('.connector-line');
+            const step1 = document.getElementById('stepDot1');
+            const step3 = document.getElementById('stepDot3');
+            const stepsContainer = document.querySelector('.steps-container');
+            
+            if (connectorLine && step1 && step3 && stepsContainer) {
+                // Get positions relative to the steps container
+                const containerRect = stepsContainer.getBoundingClientRect();
+                const step1Rect = step1.getBoundingClientRect();
+                const step3Rect = step3.getBoundingClientRect();
+                
+                // Calculate center points relative to container
+                const step1Center = (step1Rect.top + step1Rect.height / 2) - containerRect.top;
+                const step3Center = (step3Rect.top + step3Rect.height / 2) - containerRect.top;
+                
+                // Position line from step 1 center to step 3 center
+                connectorLine.style.top = step1Center + 'px';
+                connectorLine.style.height = (step3Center - step1Center) + 'px';
+                connectorLine.style.display = 'block';
+            }
+        }
+
+        // Initial update - wait for DOM to be fully loaded
+        function initialize() {
+            // Multiple attempts to ensure it works even with dynamic content
+            updateActiveStep();
+            updateConnectorLine();
+            
+            // Retry after a short delay to handle any layout shifts
+            setTimeout(() => {
+                updateActiveStep();
+                updateConnectorLine();
+            }, 100);
+            
+            // Another retry for slow-loading content
+            setTimeout(() => {
+                updateActiveStep();
+                updateConnectorLine();
+            }, 500);
+        }
+
+        // Run on load - multiple methods for compatibility
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initialize);
+        } else {
+            // DOM already loaded
+            initialize();
+        }
+        
+        // Also run when window loads (for images, etc.)
+        window.addEventListener('load', initialize);
+
+        // Listen to scroll events - multiple methods for better compatibility
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        document.addEventListener('scroll', handleScroll, { passive: true });
+        
+        // Also check on window load and after a delay to handle dynamic content
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                updateActiveStep();
+                updateConnectorLine();
+            }, 200);
+        });
+        
+        window.addEventListener('resize', () => {
+            updateActiveStep();
+            setTimeout(() => {
+                updateConnectorLine();
+            }, 100);
+        });
+        
+        // Use Intersection Observer as a fallback for better detection
+        if ('IntersectionObserver' in window) {
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -20% 0px',
+                threshold: [0, 0.25, 0.5, 0.75, 1]
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateActiveStep();
+                    }
+                });
+            }, observerOptions);
+            
+            if (stepSection) {
+                observer.observe(stepSection);
+            }
+        }
+    </script>
+</body>
+</html>
