@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         .reviews-section-main-container {
             max-width: 1440px;
@@ -104,18 +104,24 @@
             justify-content: center;
         }
 
-        /* Tablet View */
-        @media screen and (max-width: 1440px) {
-            .reviews-section-review-card {
-                width: 400px;
-                height: 200px;
+        /* Tablet: 768px to 1440px */
+        @media (max-width: 1440px) and (min-width: 768px) {
+            .reviews-section-main-container {
+                max-width: 100%;
             }
 
-            .reviews-section-review-connector {
-                width: 45px;
-                height: 45px;
-                margin-left: -12px;
-                margin-right: -12px;
+            .reviews-section-slider {
+                padding: 30px 16px;
+            }
+
+            .reviews-section-review-card {
+                width: 420px;
+                height: 210px;
+            }
+
+            .reviews-section-review-card .reviews-section-card-bg-svg svg {
+                width: 428px;
+                height: 197px;
             }
 
             .reviews-section-card-content {
@@ -123,71 +129,93 @@
             }
 
             .reviews-section-card-title {
-                font-size: 22px;
+                font-size: 24px;
                 margin-bottom: 15px;
             }
 
             .reviews-section-card-text {
-                font-size: 18px;
-            }
-
-            .reviews-section-card-icon {
-                width: 65px;
-                height: 65px;
-                right: 20px;
-            }
-        }
-
-        /* Mobile View */
-        @media screen and (max-width: 768px) {
-            .reviews-section-slider {
-                padding: 20px 20px;
-                scroll-padding-left: 20px; /* Aligns snap point */
-            }
-
-            .reviews-section-review-card {
-                width: 65vw; /* Approximately 1.5 cards visible on typical mobile screens */
-                height: 32.5vw; /* Maintain aspect ratio roughly 2:1 */
-                min-width: 220px; /* Minimum width safety */
-                min-height: 110px;
+                font-size: 20px;
             }
 
             .reviews-section-review-connector {
-                width: 30px;
-                height: 30px;
+                width: 50px;
+                height: 50px;
+                margin-left: -12px;
+                margin-right: -12px;
+            }
+
+            .reviews-section-card-icon {
+                width: 70px;
+                height: 70px;
+                right: 25px;
+            }
+
+            .reviews-section-card-icon svg {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+        /* Mobile: under 768px */
+        @media (max-width: 767px) {
+            .reviews-section-main-container {
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .reviews-section-slider {
+                padding: 20px 0 20px 16px;
+                gap: 0;
+                scroll-padding-left: 16px;
+            }
+
+            .reviews-section-review-card {
+                width: 220px;
+                height: 103px;
+                flex-shrink: 0;
+            }
+
+            .reviews-section-review-card .reviews-section-card-bg-svg svg {
+                width: 221px;
+                height: 103px;
+            }
+
+            .reviews-section-card-content {
+                padding: 8px 15px;
+                justify-content: flex-start;
+            }
+
+            .reviews-section-card-title {
+                font-size: 12px;
+                margin-bottom: 8px;
+                line-height: 1.2;
+                padding: 10px;
+            }
+
+            .reviews-section-card-text {
+                font-size: 10px;
+                line-height: 1.4;
+                max-width: 75%;
+                padding: 0 10px;
+            }
+
+            .reviews-section-review-connector {
+                width: 35px;
+                height: 35px;
                 margin-left: -8px;
                 margin-right: -8px;
             }
 
-            .reviews-section-card-content {
-                padding: 0 20px;
-                justify-content: center;
-            }
-
-            .reviews-section-card-title {
-                font-family: 'Roboto Mono', monospace;
-                font-weight: 700;
-                font-size: 12px;
-                line-height: 1.2;
-                color: #EA0F09;
-                text-transform: uppercase;
-                margin: 0 0 5px 0;
-            }
-
-            .reviews-section-card-text {
-                font-family: 'Roboto Mono', monospace;
-                font-weight: 400;
-                font-size: 10px;
-                line-height: 1.4;
-                color: #000000;
-                max-width: 85%;
-            }
-
             .reviews-section-card-icon {
-                width: 40px;
-                height: 40px;
-                right: 15px;
-                top: 25%;
+                width: 37px;
+                height: 37px;
+                right: 10px;
+                top: 20%;
+            }
+
+            .reviews-section-card-icon svg {
+                width: 37px;
+                height: 37px;
             }
         }
     </style>
