@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         .reviews-section-main-container {
-            max-width: 1440px;
             margin: 0 auto;
             align-items: center;
             font-family: 'Roboto Mono', monospace;
@@ -18,10 +17,16 @@
             align-items: flex-end;
             overflow-x: auto;
             overflow-y: hidden;
-            scroll-snap-type: x mandatory;
+            scroll-snap-type: none !important;
             padding: 40px 22px; 
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            cursor: grab;
+        }
+
+        .reviews-section-slider.active {
+            cursor: grabbing;
+            cursor: -webkit-grabbing;
         }
 
         .reviews-section-slider::-webkit-scrollbar {
@@ -31,9 +36,9 @@
         .reviews-section-review-card {
             position: relative;
             flex: 0 0 auto;
-            width: 535px;
-            height: 267px;
-            scroll-snap-align: start;
+            width: 440px; 
+            height: 222px;  
+            scroll-snap-align: none !important; /* Force disable snapping */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -106,10 +111,6 @@
 
         /* Tablet: 768px to 1440px */
         @media (max-width: 1440px) and (min-width: 768px) {
-            .reviews-section-main-container {
-                max-width: 100%;
-            }
-
             .reviews-section-slider {
                 padding: 30px 16px;
             }
@@ -149,6 +150,13 @@
             .reviews-section-card-icon svg {
                 width: 70px;
                 height: 70px;
+            }
+        }
+
+        /* Large screens: 1440px and above - ensure 3 cards visible */
+        @media (min-width: 1440px) {
+            .reviews-section-review-card {
+                width: 440px;
             }
         }
 
@@ -361,5 +369,38 @@
 
         </div>
     </div>
+
+    <script>
+        const slider = document.querySelector('.reviews-section-slider');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.classList.add('active');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+            e.preventDefault(); // Prevent text selection during drag start
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll-fast
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    </script>
 </body>
 </html>

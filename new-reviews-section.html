@@ -20,7 +20,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            max-width: 1460px; /* Increased to accommodate 3x467px + gaps */
+            max-width: 1460px; 
             margin: 0 auto;
         }
 
@@ -35,18 +35,12 @@
             padding: 32px;
             box-sizing: border-box;
             color: #000;
+            background-image: url('https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png');
+            background-size: 100% 100%; /* Stretch to fill */
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
-        /* Background Image Layer */
-        .nr-card-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            object-fit: fill; /* Ensure it stretches as per Figma 'fill' likely */
-        }
 
         .nr-card-content {
             position: relative;
@@ -133,13 +127,71 @@
         /* Responsive adjustments */
         @media (max-width: 1024px) {
             .nr-container {
-                grid-template-columns: 1fr;
-                padding: 0 20px;
+                display: flex; /* Switch to flexbox for slider */
+                grid-template-columns: unset; /* Remove grid layout */
+                overflow-x: auto; /* Enable horizontal scrolling */
+                scroll-snap-type: x mandatory; /* Enable scroll snapping */
+                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                gap: 20px;
+                padding-bottom: 20px; /* Bottom spacing */
+                scrollbar-width: none; /* Hide scrollbar for Firefox */
+                -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+            }
+
+            /* Hide scrollbar for WebKit */
+            .nr-container::-webkit-scrollbar {
+                display: none;
             }
             
             .nr-card {
+                flex: 0 0 calc(50% - 10px); /* 2 cards per row for tablet */
+                width: calc(50% - 10px);
+                scroll-snap-align: start; /* Align to start for 2-up view */
                 height: auto;
-                min-height: 400px;
+                min-height: 473px;
+                margin-right: 0;
+                padding: 20px; /* Further reduced padding */
+            }
+
+            /* Resizing elements for mobile/tablet */
+            .nr-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .nr-user-name {
+                font-size: 20px;
+                white-space: nowrap; /* Prevent name from wrapping */
+            }
+
+            .nr-stars-img {
+                height: 20px;
+            }
+
+            .nr-card-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 10px;
+                width: 100%; /* Ensure full width usage */
+            }
+
+            .nr-user-info {
+                align-items: center;
+                width: 100%; /* Ensure full width usage */
+            }
+            
+            .nr-card-content {
+                height: auto; /* Allow content to dictate height */
+            }
+        }
+
+        /* Mobile specific overrides (Standard Mobile Breakpoint) */
+        @media (max-width: 767px) {
+            .nr-card {
+                flex: 0 0 90%; /* Back to single card */
+                width: 90%;
+                scroll-snap-align: center; /* Center snap for single focus */
             }
         }
     </style>
@@ -150,7 +202,7 @@
     <div class="nr-container">
         <!-- Card 1 -->
         <div class="nr-card">
-            <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png" alt="" class="nr-card-bg">
+
             <div class="nr-card-content">
                 <div class="nr-card-header">
                     <div class="nr-avatar">
@@ -178,7 +230,7 @@
 
         <!-- Card 2 -->
         <div class="nr-card">
-            <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png" alt="" class="nr-card-bg">
+
             <div class="nr-card-content">
                 <div class="nr-card-header">
                     <div class="nr-avatar">
@@ -204,7 +256,7 @@
 
         <!-- Card 3 -->
         <div class="nr-card">
-            <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png" alt="" class="nr-card-bg">
+
             <div class="nr-card-content">
                 <div class="nr-card-header">
                     <div class="nr-avatar">
