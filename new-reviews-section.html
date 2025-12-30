@@ -3,255 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviews Section</title>
+    <title>New Reviews Section</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        /* Unique Prefix: nr- (New Reviews) */
-        
-        .nr-section-wrapper {
+        /* Scoped Styles for New Reviews Section */
+        .nr-section {
             width: 100%;
-            overflow: hidden;
-            font-family: 'Roboto Mono', monospace; /* Fallback for main text */
-            padding: 20px 0;
-            background-color: transparent; /* Or styling requested by user, default transparent for WP section */
+            padding: 40px 20px;
+            box-sizing: border-box;
+            background-color: transparent; /* Or match parent background if needed */
         }
 
-        .nr-slider-container {
-            display: flex;
-            overflow-x: auto;
+        .nr-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            padding: 20px;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE 10+ */
-            scroll-snap-type: x mandatory;
-        }
-
-        .nr-slider-container::-webkit-scrollbar {
-            display: none; /* Chrome/Safari/Webkit */
+            max-width: 1460px; /* Increased to accommodate 3x467px + gaps */
+            margin: 0 auto;
         }
 
         .nr-card {
-            flex: 0 0 auto;
-            width: 520px;
-            background-color: #F6EBDA;
+            position: relative;
+            width: 100%;
+            height: 473px;
             border-radius: 13px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
             padding: 32px;
             box-sizing: border-box;
-            scroll-snap-align: center;
+            color: #000;
+        }
+
+        /* Background Image Layer */
+        .nr-card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            object-fit: fill; /* Ensure it stretches as per Figma 'fill' likely */
+        }
+
+        .nr-card-content {
+            position: relative;
+            z-index: 1;
             display: flex;
             flex-direction: column;
             gap: 32px;
-            position: relative;
+            height: 100%;
         }
 
-        /* Mobile Responsiveness for Card */
-        @media (max-width: 600px) {
-            .nr-card {
-                width: 90%;
-                margin-right: 10px;
-            }
-        }
-
+        /* Header: Avatar + Info */
         .nr-card-header {
             display: flex;
             align-items: center;
-            gap: 39px; /* From Figma gap-[38.868px] */
+            gap: 38px;
         }
 
-        .nr-avatar-container {
+        .nr-avatar {
             width: 116px;
             height: 116px;
-            flex-shrink: 0;
             border-radius: 50%;
             overflow: hidden;
-            background-color: #ddd; /* Placeholder bg */
+            flex-shrink: 0;
         }
 
-        .nr-avatar-img {
+        .nr-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .nr-header-content {
+        .nr-user-info {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            justify-content: center;
+            gap: 10px;
         }
 
-        .nr-product-title {
+        .nr-user-name {
             font-family: 'Roboto Mono', monospace;
-            font-weight: 700;
-            font-size: 20px; /* Estimated based on hierarchy */
-            color: #000;
-            text-transform: uppercase;
+            font-weight: 500;
+            font-size: 24px; /* Estimated from visual */
             margin: 0;
         }
 
-        .nr-verified-badge {
+        .nr-stars {
             display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-            font-size: 14px;
-            color: #2E7D32; /* Green for verified */
-            background-color: rgba(46, 125, 50, 0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
-            width: fit-content;
+            gap: 5px;
         }
 
-        .nr-verified-icon {
-            width: 14px;
-            height: 14px;
-            fill: currentColor;
+        .nr-stars-img {
+            height: 24px;
+            width: auto;
+            display: block;
         }
 
-        .nr-stars-container {
-            display: flex;
-            gap: 4px;
-            margin-top: 8px;
-        }
-
-        .nr-star-svg {
-            width: 20px;
-            height: 20px;
-            fill: #EA0F09; /* Matches the red accent often used, or standard gold. User asked for blanks? I'll use a filled star path. Using #F59E0B (Gold) is safer, but previous had #EA0F09. I'll stick to a Gold/Orange or Red if specified. Let's use Gold for stars usually. */
-            fill: #F59E0B; 
-        }
-
+        /* Review Body */
         .nr-review-body {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
         .nr-quote-icon {
+           font-size: 60px;
+           line-height: 1;
+           font-family: serif;
+           margin-bottom: -20px;
+           display: block;
+        }
+        
+        .nr-quote-img {
             width: 26px;
-            height: 22px;
-            opacity: 0.5;
+            height: 21px;
+            display: block;
         }
 
         .nr-review-text {
-            font-family: 'Genova', 'Roboto Mono', sans-serif; /* Genova fallback to Roboto Mono */
+            font-family: 'Genova', sans-serif; /* Fallback to sans-serif */
             font-size: 20px;
             line-height: 1.2;
-            color: #000;
             margin: 0;
         }
-
+        
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .nr-container {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+            
+            .nr-card {
+                height: auto;
+                min-height: 400px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="nr-section-wrapper">
-        <div class="nr-slider-container">
-            
-            <!-- Card 1 -->
-            <div class="nr-card">
+<section class="nr-section">
+    <div class="nr-container">
+        <!-- Card 1 -->
+        <div class="nr-card">
+            <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png" alt="" class="nr-card-bg">
+            <div class="nr-card-content">
                 <div class="nr-card-header">
-                    <div class="nr-avatar-container">
+                    <div class="nr-avatar">
                         <!-- Placeholder Avatar -->
-                        <svg class="nr-avatar-img" viewBox="0 0 100 100" fill="#ccc">
-                            <rect width="100" height="100" />
-                            <circle cx="50" cy="40" r="20" fill="#999"/>
-                            <path d="M20 90 Q50 60 80 90" stroke="#999" stroke-width="5" fill="none"/>
-                        </svg>
+                        <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Ellipse-116-1.png" alt="Germain D.">
                     </div>
-                    <div class="nr-header-content">
-                        <h3 class="nr-product-title">RETROGAME CONSOLES</h3>
-                        <div class="nr-verified-badge">
-                            <!-- Checkmark SVG -->
-                            <svg class="nr-verified-icon" viewBox="0 0 24 24">
-                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                            </svg>
-                            <span>Achat vérifié</span>
-                        </div>
-                        <div class="nr-stars-container">
-                            <!-- 5 Stars as requested -->
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">Germain D.</h3>
+                        <div class="nr-stars">
+                             <!-- 5 Stars Image -->
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
                         </div>
                     </div>
                 </div>
                 <div class="nr-review-body">
-                    <!-- Quote Icon SVG -->
-                    <svg class="nr-quote-icon" viewBox="0 0 24 24">
-                        <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" fill="#000"/>
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+                        Excellent produit. Excellent service. Excellent site. Je retombe en enfance. merci !!!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="nr-card">
+            <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png" alt="" class="nr-card-bg">
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/E2llipse-116.png" alt="Fabien R.">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">Fabien R.</h3>
+                        <div class="nr-stars">
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
                     </svg>
                     <p class="nr-review-text">
                         Excellente console, possède une incroyable variété de jeux, je la recommande à 100%.
                     </p>
                 </div>
             </div>
-
-             <!-- Card 2 (Duplicate for Slider) -->
-             <div class="nr-card">
-                <div class="nr-card-header">
-                    <div class="nr-avatar-container">
-                        <svg class="nr-avatar-img" viewBox="0 0 100 100" fill="#ccc"><rect width="100" height="100"/><circle cx="50" cy="40" r="20" fill="#999"/></svg>
-                    </div>
-                    <div class="nr-header-content">
-                        <h3 class="nr-product-title">RETROGAME CONSOLES</h3>
-                        <div class="nr-verified-badge">
-                            <svg class="nr-verified-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            <span>Achat vérifié</span>
-                        </div>
-                        <div class="nr-stars-container">
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="nr-review-body">
-                    <svg class="nr-quote-icon" viewBox="0 0 24 24"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" fill="#000"/></svg>
-                    <p class="nr-review-text">
-                        Magnifique expérience de jeu, tous mes classiques préférés sont là !
-                    </p>
-                </div>
-            </div>
-
-            <!-- Card 3 (Duplicate for Slider) -->
-            <div class="nr-card">
-                <div class="nr-card-header">
-                    <div class="nr-avatar-container">
-                        <svg class="nr-avatar-img" viewBox="0 0 100 100" fill="#ccc"><rect width="100" height="100"/><circle cx="50" cy="40" r="20" fill="#999"/></svg>
-                    </div>
-                    <div class="nr-header-content">
-                        <h3 class="nr-product-title">RETROGAME CONSOLES</h3>
-                        <div class="nr-verified-badge">
-                            <svg class="nr-verified-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            <span>Achat vérifié</span>
-                        </div>
-                        <div class="nr-stars-container">
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="nr-star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="nr-review-body">
-                    <svg class="nr-quote-icon" viewBox="0 0 24 24"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" fill="#000"/></svg>
-                    <p class="nr-review-text">
-                        Envoi rapide et soigné. Mon fils adore.
-                    </p>
-                </div>
-            </div>
-
         </div>
+
+        <!-- Card 3 -->
+        <div class="nr-card">
+            <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png" alt="" class="nr-card-bg">
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Ellipse-116-1.png" alt="Germain D.">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">Germain D.</h3>
+                        <div class="nr-stars">
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+                        Excellent produit. Excellent service. Excellent site. Je retombe en enfance. merci !!!
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
+</section>
 
 </body>
 </html>
