@@ -93,7 +93,7 @@
     }
 
     .card-title {
-        font-size: 2.5rem;
+        font-size: 40px;
         font-weight: 900;
         text-transform: uppercase;
         margin: 40px 0 20px 0;
@@ -121,7 +121,7 @@
     .feature-item {
         padding: 15px 0;
         text-align: center;
-        font-size: 1.25rem;
+        font-size: 20px;
         font-weight: 400;
         border-bottom: 1.157px solid #000;
         font-family: 'Genova', sans-serif;
@@ -132,25 +132,75 @@
         border-bottom: none;
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
+    @media (max-width: 768px) {
         .promo-container {
-            width: 90%;
-            padding: 40px 20px;
+            width: 100%; /* Full width for all mobile sizes */
+            max-width: 100%; /* Override desktop max-width */
+            padding: 12px 29px; /* Exact padding from Figma */
+            box-sizing: border-box;
         }
         
-        .promo-title, .promo-subtitle {
-            font-size: 1.25rem;
+        .promo-header {
+             margin-bottom: 50px;
+        }
+
+        .promo-title {
+            font-size: 22px !important;
+            line-height: 22px;
+        }
+
+        .promo-subtitle {
+            font-size: 30px !important;
+            line-height: 30px;
+        }
+
+        .comparison-wrapper {
+            flex-wrap: nowrap !important; /* Force side-by-side */
+            gap: 10px; /* Reduced gap for small screens */
+            align-items: stretch;
         }
 
         .card {
-            margin-top: 40px; /* Space for icon stacking */
+            min-width: 0 !important; /* Override desktop min-width */
+            margin-top: 30px; /* Reduced top margin */
+            padding: 40px 5px 15px 5px; /* Compact padding */
+            border-radius: 8px; /* matched Figma 8.325px */
+        }
+        
+        /* Specific Card Styling from Figma */
+        .card-avant {
+            border-width: 1px;
+        }
+        
+        .card-apres {
+            border-width: 1px;
+            box-shadow: 0 5px 15px rgba(255, 115, 0, 0.3);
+        }
+
+        .card-icon {
+            width: 54px;
+            height: 54px;
+            top: -27px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin: 25px 0 15px 0;
+        }
+
+        .feature-item {
+            font-size: 12px;
+            padding: 8px 0;
         }
     }
     
     @media (max-width: 600px) {
-        .promo-title, .promo-subtitle {
-            font-size: 1rem;
+        .promo-title {
+            font-size: 22px !important;
+        }
+        
+        .promo-subtitle {
+            font-size: 30px !important;
         }
     }
 </style>

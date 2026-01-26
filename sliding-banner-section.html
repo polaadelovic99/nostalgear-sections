@@ -227,250 +227,293 @@
     </section>
 
     <script>
-        class SlidingBanner {
-            constructor() {
-                this.track = document.getElementById('bannerTrack');
-                this.dots = document.querySelectorAll('.banner-dot');
-                this.slides = document.querySelectorAll('.banner-slide');
-                this.currentSlide = 0;
-                this.totalSlides = this.slides.length;
-                this.autoSlideInterval = null;
-                this.autoSlideDelay = 4000; // 4 seconds
-                this.isPaused = false;
-                this.isSliderMode = false;
-
-                this.init();
-            }
-
-            checkScreenSize() {
-                // Check if we're in slider mode (screens smaller than 1024px)
-                const wasSliderMode = this.isSliderMode;
-                this.isSliderMode = window.innerWidth < 1024;
-
-                // Update dots visibility based on mode
-                this.updateDotsVisibility();
-
-                // If mode changed, reset
-                if (wasSliderMode !== this.isSliderMode) {
-                    if (this.isSliderMode) {
-                        // Entered slider mode
-                        this.startAutoSlide();
-                        this.updateSlide();
-                    } else {
-                        // Entered desktop mode - show all items
-                        this.stopAutoSlide();
-                        this.track.style.transform = 'translateX(0)';
-                        this.currentSlide = 0;
-                        this.updateDots();
-                    }
-                }
-            }
-
-            updateDotsVisibility() {
-                const dotsContainer = document.getElementById('bannerDots');
-                if (dotsContainer) {
-                    if (this.isSliderMode) {
-                        // Show dots in slider mode (elements are hidden)
-                        dotsContainer.classList.add('slider-mode');
-                    } else {
-                        // Hide dots in desktop mode (all elements visible)
-                        dotsContainer.classList.remove('slider-mode');
-                    }
-                }
-            }
-
-            ensureFullWidth() {
-                const bannerSection = document.querySelector('.sliding-banner-section');
-                if (!bannerSection) return;
-
-                // Get viewport width
-                const viewportWidth = window.innerWidth;
-                
-                // Get the banner's current position and parent
-                const rect = bannerSection.getBoundingClientRect();
-                const parent = bannerSection.parentElement;
-                
-                if (parent) {
-                    const parentRect = parent.getBoundingClientRect();
-                    const parentLeft = parentRect.left;
-                    const parentRight = window.innerWidth - parentRect.right;
-                    
-                    // Calculate negative margins to break out of container
-                    const marginLeft = -parentLeft;
-                    const marginRight = -(window.innerWidth - parentRect.right);
-                    
-                    bannerSection.style.marginLeft = marginLeft + 'px';
-                    bannerSection.style.marginRight = marginRight + 'px';
-                    bannerSection.style.width = viewportWidth + 'px';
-                    bannerSection.style.maxWidth = viewportWidth + 'px';
-                }
-            }
-
-            init() {
-                // Ensure full width first
-                this.ensureFullWidth();
-                
-                // Check initial screen size and set dots visibility
-                this.checkScreenSize();
-                this.updateDotsVisibility();
-
-                // Set up dot navigation
-                this.dots.forEach((dot, index) => {
-                    dot.addEventListener('click', () => {
-                        if (this.isSliderMode) {
-                            this.goToSlide(index);
-                        }
-                    });
-                });
-
-                // Pause on hover (only in slider mode)
-                const bannerSection = document.querySelector('.sliding-banner-section');
-                if (bannerSection) {
-                    bannerSection.addEventListener('mouseenter', () => {
-                        if (this.isSliderMode) {
-                            this.pause();
-                        }
-                    });
-                    bannerSection.addEventListener('mouseleave', () => {
-                        if (this.isSliderMode) {
-                            this.resume();
-                        }
-                    });
-                }
-
-                // Handle window resize
-                window.addEventListener('resize', () => {
-                    this.ensureFullWidth();
-                    this.checkScreenSize();
-                });
-
-                // Handle visibility change (pause when tab is hidden)
-                document.addEventListener('visibilitychange', () => {
-                    if (this.isSliderMode) {
-                        if (document.hidden) {
-                            this.pause();
-                        } else {
-                            this.resume();
-                        }
-                    }
-                });
-            }
-
-            goToSlide(index) {
-                if (!this.isSliderMode || index < 0 || index >= this.totalSlides) return;
-
-                this.currentSlide = index;
-                this.updateSlide();
-                this.updateDots();
-                this.resetAutoSlide();
-            }
-
-            nextSlide() {
-                if (!this.isSliderMode) return;
-                this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-                this.updateSlide();
-                this.updateDots();
-            }
-
-            prevSlide() {
-                if (!this.isSliderMode) return;
-                this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-                this.updateSlide();
-                this.updateDots();
-            }
-
-            updateSlide() {
-                if (!this.isSliderMode) {
-                    // Desktop mode - no transform needed
-                    this.track.style.transform = 'translateX(0)';
-                    return;
-                }
-                // Slider mode - apply transform
-                const translateX = -this.currentSlide * 100;
-                this.track.style.transform = `translateX(${translateX}%)`;
-            }
-
-            updateDots() {
-                this.dots.forEach((dot, index) => {
-                    if (index === this.currentSlide) {
-                        dot.classList.add('active');
-                    } else {
-                        dot.classList.remove('active');
-                    }
-                });
-            }
-
-            startAutoSlide() {
-                if (!this.isSliderMode) return;
-                
-                if (this.autoSlideInterval) {
-                    clearInterval(this.autoSlideInterval);
-                }
-
-                this.autoSlideInterval = setInterval(() => {
-                    if (!this.isPaused && this.isSliderMode) {
-                        this.nextSlide();
-                    }
-                }, this.autoSlideDelay);
-            }
-
-            stopAutoSlide() {
-                if (this.autoSlideInterval) {
-                    clearInterval(this.autoSlideInterval);
+        (function() {
+            class CustomSlidingBanner {
+                constructor() {
+                    this.track = document.getElementById('bannerTrack');
+                    this.dots = document.querySelectorAll('.banner-dot');
+                    this.slides = document.querySelectorAll('.banner-slide');
+                    this.currentSlide = 0;
+                    this.totalSlides = this.slides.length;
                     this.autoSlideInterval = null;
+                    this.autoSlideDelay = 4000; // 4 seconds
+                    this.isPaused = false;
+                    this.isSliderMode = false;
+                    
+                    // Touch handling variables
+                    this.touchStartX = 0;
+                    this.touchEndX = 0;
+
+                    this.init();
+                }
+
+                checkScreenSize() {
+                    // Check if we're in slider mode (screens smaller than 1024px)
+                    const wasSliderMode = this.isSliderMode;
+                    this.isSliderMode = window.innerWidth < 1024;
+
+                    // Update dots visibility based on mode
+                    this.updateDotsVisibility();
+
+                    // If mode changed, reset
+                    if (wasSliderMode !== this.isSliderMode) {
+                        if (this.isSliderMode) {
+                            // Entered slider mode
+                            this.startAutoSlide();
+                            this.updateSlide();
+                        } else {
+                            // Entered desktop mode - show all items
+                            this.stopAutoSlide();
+                            this.track.style.transform = 'translateX(0)';
+                            this.currentSlide = 0;
+                            this.updateDots();
+                        }
+                    }
+                }
+
+                updateDotsVisibility() {
+                    const dotsContainer = document.getElementById('bannerDots');
+                    if (dotsContainer) {
+                        if (this.isSliderMode) {
+                            // Show dots in slider mode (elements are hidden)
+                            dotsContainer.classList.add('slider-mode');
+                        } else {
+                            // Hide dots in desktop mode (all elements visible)
+                            dotsContainer.classList.remove('slider-mode');
+                        }
+                    }
+                }
+
+                ensureFullWidth() {
+                    const bannerSection = document.querySelector('.sliding-banner-section');
+                    if (!bannerSection) return;
+
+                    // Get viewport width
+                    const viewportWidth = window.innerWidth;
+                    
+                    // Get the banner's current position and parent
+                    const rect = bannerSection.getBoundingClientRect();
+                    const parent = bannerSection.parentElement;
+                    
+                    if (parent) {
+                        const parentRect = parent.getBoundingClientRect();
+                        const parentLeft = parentRect.left;
+                        const parentRight = window.innerWidth - parentRect.right;
+                        
+                        // Calculate negative margins to break out of container
+                        const marginLeft = -parentLeft;
+                        const marginRight = -(window.innerWidth - parentRect.right);
+                        
+                        // Apply margins to stretch full width
+                        bannerSection.style.marginLeft = marginLeft + 'px';
+                        bannerSection.style.marginRight = marginRight + 'px';
+                        bannerSection.style.width = viewportWidth + 'px';
+                        bannerSection.style.maxWidth = viewportWidth + 'px';
+                    }
+                }
+
+                init() {
+                    // Ensure full width first
+                    this.ensureFullWidth();
+                    
+                    // Check initial screen size and set dots visibility
+                    this.checkScreenSize();
+                    this.updateDotsVisibility();
+
+                    // Set up dot navigation
+                    this.dots.forEach((dot, index) => {
+                        dot.addEventListener('click', () => {
+                            if (this.isSliderMode) {
+                                this.goToSlide(index);
+                            }
+                        });
+                    });
+
+                    // Pause on hover (only in slider mode)
+                    const bannerSection = document.querySelector('.sliding-banner-section');
+                    if (bannerSection) {
+                        bannerSection.addEventListener('mouseenter', () => {
+                            if (this.isSliderMode) {
+                                this.pause();
+                            }
+                        });
+                        bannerSection.addEventListener('mouseleave', () => {
+                            if (this.isSliderMode) {
+                                this.resume();
+                            }
+                        });
+                    }
+
+                    // Initialize touch events for mobile swipe
+                    this.initTouchEvents();
+
+                    // Handle window resize
+                    window.addEventListener('resize', () => {
+                        this.ensureFullWidth();
+                        this.checkScreenSize();
+                    });
+
+                    // Handle visibility change (pause when tab is hidden)
+                    document.addEventListener('visibilitychange', () => {
+                        if (this.isSliderMode) {
+                            if (document.hidden) {
+                                this.pause();
+                            } else {
+                                this.resume();
+                            }
+                        }
+                    });
+                }
+
+                initTouchEvents() {
+                    const bannerSection = document.querySelector('.sliding-banner-section');
+                    if (!bannerSection) return;
+
+                    bannerSection.addEventListener('touchstart', (e) => {
+                        this.touchStartX = e.changedTouches[0].screenX;
+                    }, { passive: true });
+
+                    bannerSection.addEventListener('touchend', (e) => {
+                        this.touchEndX = e.changedTouches[0].screenX;
+                        this.handleGesture();
+                    }, { passive: true });
+                }
+
+                handleGesture() {
+                    if (!this.isSliderMode) return;
+                    
+                    // Swipe Threshold
+                    const swipeThreshold = 50;
+
+                    if (this.touchEndX < this.touchStartX - swipeThreshold) {
+                        // Swiped Left -> Next Slide
+                        this.nextSlide();
+                        this.resetAutoSlide();
+                    }
+                    
+                    if (this.touchEndX > this.touchStartX + swipeThreshold) {
+                        // Swiped Right -> Prev Slide
+                        this.prevSlide();
+                        this.resetAutoSlide();
+                    }
+                }
+
+                goToSlide(index) {
+                    if (!this.isSliderMode || index < 0 || index >= this.totalSlides) return;
+
+                    this.currentSlide = index;
+                    this.updateSlide();
+                    this.updateDots();
+                    this.resetAutoSlide();
+                }
+
+                nextSlide() {
+                    if (!this.isSliderMode) return;
+                    this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+                    this.updateSlide();
+                    this.updateDots();
+                }
+
+                prevSlide() {
+                    if (!this.isSliderMode) return;
+                    this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+                    this.updateSlide();
+                    this.updateDots();
+                }
+
+                updateSlide() {
+                    if (!this.isSliderMode) {
+                        // Desktop mode - no transform needed
+                        this.track.style.transform = 'translateX(0)';
+                        return;
+                    }
+                    // Slider mode - apply transform
+                    const translateX = -this.currentSlide * 100;
+                    this.track.style.transform = `translateX(${translateX}%)`;
+                }
+
+                updateDots() {
+                    this.dots.forEach((dot, index) => {
+                        if (index === this.currentSlide) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                }
+
+                startAutoSlide() {
+                    if (!this.isSliderMode) return;
+                    
+                    if (this.autoSlideInterval) {
+                        clearInterval(this.autoSlideInterval);
+                    }
+
+                    this.autoSlideInterval = setInterval(() => {
+                        if (!this.isPaused && this.isSliderMode) {
+                            this.nextSlide();
+                        }
+                    }, this.autoSlideDelay);
+                }
+
+                stopAutoSlide() {
+                    if (this.autoSlideInterval) {
+                        clearInterval(this.autoSlideInterval);
+                        this.autoSlideInterval = null;
+                    }
+                }
+
+                pause() {
+                    this.isPaused = true;
+                }
+
+                resume() {
+                    this.isPaused = false;
+                }
+
+                resetAutoSlide() {
+                    if (this.isSliderMode) {
+                        this.startAutoSlide();
+                    }
+                }
+
+                // Method to update SVG icons
+                updateIcon(slideIndex, svgCode) {
+                    const iconElement = document.getElementById(`icon${slideIndex + 1}`);
+                    if (iconElement) {
+                        iconElement.innerHTML = svgCode;
+                    }
                 }
             }
 
-            pause() {
-                this.isPaused = true;
+            // Initialize banner when DOM is ready
+            let customBannerInstance;
+            function initCustomBanner() {
+                customBannerInstance = new CustomSlidingBanner();
+                // Re-ensure full width after a short delay to handle dynamic content
+                setTimeout(() => {
+                    if (customBannerInstance && customBannerInstance.ensureFullWidth) {
+                        customBannerInstance.ensureFullWidth();
+                    }
+                }, 100);
             }
 
-            resume() {
-                this.isPaused = false;
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initCustomBanner);
+            } else {
+                initCustomBanner();
             }
 
-            resetAutoSlide() {
-                if (this.isSliderMode) {
-                    this.startAutoSlide();
+            // Also ensure full width on window load
+            window.addEventListener('load', () => {
+                if (customBannerInstance && customBannerInstance.ensureFullWidth) {
+                    customBannerInstance.ensureFullWidth();
                 }
-            }
+            });
 
-            // Method to update SVG icons
-            updateIcon(slideIndex, svgCode) {
-                const iconElement = document.getElementById(`icon${slideIndex + 1}`);
-                if (iconElement) {
-                    iconElement.innerHTML = svgCode;
-                }
-            }
-        }
-
-        // Initialize banner when DOM is ready
-        let banner;
-        function initBanner() {
-            banner = new SlidingBanner();
-            // Re-ensure full width after a short delay to handle dynamic content
-            setTimeout(() => {
-                if (banner && banner.ensureFullWidth) {
-                    banner.ensureFullWidth();
-                }
-            }, 100);
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initBanner);
-        } else {
-            initBanner();
-        }
-
-        // Also ensure full width on window load
-        window.addEventListener('load', () => {
-            if (banner && banner.ensureFullWidth) {
-                banner.ensureFullWidth();
-            }
-        });
-
-        // Export banner instance for external use (e.g., to update icons)
-        window.slidingBanner = banner;
+            // Export banner instance for external use (e.g., to update icons)
+            window.customSlidingBanner = customBannerInstance;
+        })();
     </script>
 </body>
 </html>

@@ -119,6 +119,10 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .tv-comparison-section {
+                background-color: #EFEADD;
+            }
+
             .play-button {
                 width: 80px;
                 height: 80px;
@@ -159,49 +163,53 @@
     </section>
 
     <script>
-        const playButton = document.getElementById('playButton');
-        const comparisonVideo = document.getElementById('comparisonVideo');
-        
-        playButton.addEventListener('click', function() {
-            const playPromise = comparisonVideo.play();
+        (function() {
+            const customTvPlayButton = document.getElementById('playButton');
+            const customComparisonVideo = document.getElementById('comparisonVideo');
+            
+            if (customTvPlayButton && customComparisonVideo) {
+                customTvPlayButton.addEventListener('click', function() {
+                    const playPromise = customComparisonVideo.play();
 
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                    })
-                    .catch(error => {
-                        console.log('Video autoplay prevented:', error);
-                    });
+                    if (playPromise !== undefined) {
+                        playPromise
+                            .then(() => {
+                            })
+                            .catch(error => {
+                                console.log('Video autoplay prevented:', error);
+                            });
+                    }
+
+                    customTvPlayButton.classList.add('playing');
+                });
+
+                customComparisonVideo.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (!customComparisonVideo.paused) {
+                        customComparisonVideo.pause();
+                        customTvPlayButton.classList.remove('playing');
+                    }
+                });
+
+                customComparisonVideo.addEventListener('ended', function() {
+                    if (!customComparisonVideo.loop) {
+                        customTvPlayButton.classList.remove('playing');
+                    }
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.code === 'Space' && e.target === document.body) {
+                        e.preventDefault();
+                        if (customComparisonVideo.paused) {
+                            customTvPlayButton.click();
+                        } else {
+                            customComparisonVideo.pause();
+                            customTvPlayButton.classList.remove('playing');
+                        }
+                    }
+                });
             }
-
-            playButton.classList.add('playing');
-        });
-
-        comparisonVideo.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (!comparisonVideo.paused) {
-                comparisonVideo.pause();
-                playButton.classList.remove('playing');
-            }
-        });
-
-        comparisonVideo.addEventListener('ended', function() {
-            if (!comparisonVideo.loop) {
-                playButton.classList.remove('playing');
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.code === 'Space' && e.target === document.body) {
-                e.preventDefault();
-                if (comparisonVideo.paused) {
-                    playButton.click();
-                } else {
-                    comparisonVideo.pause();
-                    playButton.classList.remove('playing');
-                }
-            }
-        });
+        })();
     </script>
 </body>
 </html>

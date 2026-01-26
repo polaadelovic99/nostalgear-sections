@@ -303,7 +303,7 @@ Je me permets d’écrire un avis déjà pour remercier le président de la soci
 Il faut savoir dire quand une société est fiable et je confirme que la société nostal gear et totalement fiable
 Merci encore pour votre suivi
 Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
-                    <div class="nr-read-more-btn" onclick="toggleReview(this)">
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
                         <span class="nr-read-more-text">Avis</span>
                         <div class="nr-read-more-icon">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -337,7 +337,7 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
                     </svg>
                     <p class="nr-review-text">
                         Beaucoup de jeux, en français et fluide. Certes c'est un investissement, mais cela en vaut la peine !                    </p>
-                    <div class="nr-read-more-btn" onclick="toggleReview(this)">
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
                         <span class="nr-read-more-text">Avis</span>
                         <div class="nr-read-more-icon">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -372,7 +372,7 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
                     <p class="nr-review-text">
                         Salut à tous, je souhaite signaler que la console fonctionne super bien. Je l'ai reçu dans le délai de livraison estimée (la console et les 4 manettes) et j'étais super heureux de la recevoir. Je passe mon temps à rejouer à de vieux jeux pokémon ça me rend tellement nostalgique 🤩
                     </p>
-                    <div class="nr-read-more-btn" onclick="toggleReview(this)">
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
                         <span class="nr-read-more-text">Avis</span>
                         <div class="nr-read-more-icon">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -407,7 +407,7 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
                     <p class="nr-review-text">
                         Super de jouer à des jeux vidéos enfances merci nostalgear
                     </p>
-                    <div class="nr-read-more-btn" onclick="toggleReview(this)">
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
                         <span class="nr-read-more-text">Avis</span>
                         <div class="nr-read-more-icon">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -441,7 +441,7 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
                     <p class="nr-review-text">
                         Produit conforme par rapport à la description très facile à jouer très maniable plus qu'à attendre la nouvelle manette pro qui est en rupture de stock et du coup ils m'ont dit qu'il m'enverrait la manette dès qu'ils ont reçu le stock encore merci pour tout
                     </p>
-                    <div class="nr-read-more-btn" onclick="toggleReview(this)">
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
                         <span class="nr-read-more-text">Avis</span>
                         <div class="nr-read-more-icon">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -475,7 +475,7 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
                     <p class="nr-review-text">
                         Très bonne console rétro !!
                     </p>
-                    <div class="nr-read-more-btn" onclick="toggleReview(this)">
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
                         <span class="nr-read-more-text">Avis</span>
                         <div class="nr-read-more-icon">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -491,79 +491,83 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
         </section>
 
 <script>
-    function toggleReview(button) {
-        const card = button.closest('.nr-card');
-        card.classList.toggle('expanded');
-    }
+    (function() {
+        function nrToggleReview(button) {
+            const card = button.closest('.nr-card');
+            card.classList.toggle('expanded');
+        }
+        // Expose to window for onclick attribute
+        window.nrToggleReview = nrToggleReview;
 
-    function checkOverflow() {
-        const texts = document.querySelectorAll('.nr-review-text');
-        texts.forEach(text => {
-            const btn = text.parentElement.querySelector('.nr-read-more-btn');
-            if (btn) {
-                // Check if text exceeds the clamped height
-                // Adding 1px buffer for potential rounding differences
-                if (text.scrollHeight > text.clientHeight + 1) {
-                    btn.style.display = 'flex';
-                } else {
-                    btn.style.display = 'none';
+        function nrCheckOverflow() {
+            const texts = document.querySelectorAll('.nr-review-text');
+            texts.forEach(text => {
+                const btn = text.parentElement.querySelector('.nr-read-more-btn');
+                if (btn) {
+                    // Check if text exceeds the clamped height
+                    // Adding 1px buffer for potential rounding differences
+                    if (text.scrollHeight > text.clientHeight + 1) {
+                        btn.style.display = 'flex';
+                    } else {
+                        btn.style.display = 'none';
+                    }
                 }
-            }
+            });
+        }
+
+        // Drag to scroll functionality
+        function nrInitDragScroll() {
+            const nrSlider = document.querySelector('.nr-container');
+            if (!nrSlider) return;
+
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            // Prevent default drag behavior on images/links
+            nrSlider.addEventListener('dragstart', (e) => e.preventDefault());
+
+            nrSlider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                nrSlider.classList.add('active');
+                startX = e.pageX - nrSlider.offsetLeft;
+                scrollLeft = nrSlider.scrollLeft;
+            });
+
+            nrSlider.addEventListener('mouseleave', () => {
+                isDown = false;
+                nrSlider.classList.remove('active');
+            });
+
+            nrSlider.addEventListener('mouseup', () => {
+                isDown = false;
+                nrSlider.classList.remove('active');
+            });
+
+            nrSlider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - nrSlider.offsetLeft;
+                const walk = (x - startX) * 2; // Scroll-fast multiplier
+                nrSlider.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // Initialize scripts
+        document.addEventListener('DOMContentLoaded', () => {
+            nrCheckOverflow();
+            nrInitDragScroll();
         });
-    }
-
-    // Drag to scroll functionality
-    function initDragScroll() {
-        const slider = document.querySelector('.nr-container');
-        if (!slider) return;
-
-        let isDown = false;
-        let startX;
-        let scrollLeft;
-
-        // Prevent default drag behavior on images/links
-        slider.addEventListener('dragstart', (e) => e.preventDefault());
-
-        slider.addEventListener('mousedown', (e) => {
-            isDown = true;
-            slider.classList.add('active');
-            startX = e.pageX - slider.offsetLeft;
-            scrollLeft = slider.scrollLeft;
-        });
-
-        slider.addEventListener('mouseleave', () => {
-            isDown = false;
-            slider.classList.remove('active');
-        });
-
-        slider.addEventListener('mouseup', () => {
-            isDown = false;
-            slider.classList.remove('active');
-        });
-
-        slider.addEventListener('mousemove', (e) => {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2; // Scroll-fast multiplier
-            slider.scrollLeft = scrollLeft - walk;
-        });
-    }
-
-    // Initialize scripts
-    document.addEventListener('DOMContentLoaded', () => {
-        checkOverflow();
-        initDragScroll();
-    });
-    
-    // Fallback for cases where DOMContentLoaded already fired (common in some WP AJAX loads)
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        checkOverflow();
-        initDragScroll();
-    }
-    
-    window.addEventListener('load', checkOverflow);
-    window.addEventListener('resize', checkOverflow);
+        
+        // Fallback for cases where DOMContentLoaded already fired (common in some WP AJAX loads)
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            nrCheckOverflow();
+            nrInitDragScroll();
+        }
+        
+        window.addEventListener('load', nrCheckOverflow);
+        window.addEventListener('resize', nrCheckOverflow);
+    })();
 </script>
 
 </body>
