@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+
+        .step-indicator-section {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0px 20px;
+            background-color: transparent;
+        }
+
+        .steps-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 350px;
+            padding: 20px 0;
+        }
+        .connector-line {
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            background-color: #000;
+            transform: translateX(-50%);
+            z-index: 1;
+            display: block;
+        }
+
+        .step-item {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            z-index: 2;
+            min-height: 60px;
+            margin: 0;
+        }
+
+        .step-item[data-step="1"] {
+            margin-top: 0;
+        }
+        .step-item[data-step="2"] {
+            flex: 1;
+        }
+
+        .step-item[data-step="3"] {
+            margin-bottom: 0;
+        }
+        .step-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            z-index: 3;
+        }
+
+        .step-dot.active {
+            background-color: #8D1739;
+            color: white;
+            border: none;
+        }
+
+        .step-dot.inactive {
+            background-color: #EFEADD;
+            color: #000;
+            border: 2px solid #000;
+        }
+
+        .step-text {
+            position: absolute;
+            font-size: 24px;
+            line-height: 1.1;
+            color: #000;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Genova';
+        }
+
+        .step-item.right-text .step-text {
+            left: calc(60% + 40px);
+            text-align: left;
+        }
+        .step-item.left-text .step-text {
+            right: calc(60% + 40px);
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .step-indicator-section {
+                padding: 20px 15px;
+            }
+
+            .steps-container {
+                min-height: 220px;
+                padding: 20px 0;
+                gap: 30px;
+            }
+
+            .connector-line {
+                left: 40% !important;
+                transform: translateX(-50%);
+                width: 2px;
+                background-color: #000;
+                z-index: 1;
+                display: block !important;
+            }
+
+            .step-item[data-step="2"] {
+                flex: none;
+            }
+
+            .step-dot {
+                position: absolute;
+                left: 40%;
+                transform: translateX(-50%);
+                width: 28px;
+                height: 28px;
+                font-size: 13px;
+            }
+
+            .step-dot.inactive {
+                border: 1.5px solid #000;
+            }
+
+            .step-text {
+                font-size: 16px;
+                line-height: 1.2;
+            }
+
+            .step-item.right-text .step-text {
+                left: calc(40% + 28px);
+                right: auto;
+                text-align: left;
+            }
+
+            .step-item.left-text .step-text {
+                right: calc(60% + 28px);
+                left: auto;
+                text-align: right;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .step-indicator-section {
+                padding: 20px 15px;
+            }
+
+            .steps-container {
+                min-height: 180px;
+                padding: 15px 0;
+                align-items: center;
+                gap: 22px;
+            }
+            .connector-line {
+                left: 40% !important;
+                transform: translateX(-50%);
+                width: 2px;
+                background-color: #000;
+                z-index: 1;
+                display: block !important;
+                top: 25px;
+                bottom: 25px;
+                height: auto !important;
+            }
+            .step-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                min-height: 45px;
+                width: 100%;
+                position: relative;
+            }
+            .step-item[data-step="2"] {
+                flex: none;
+            }
+            .step-dot {
+                position: absolute;
+                left: 40%;
+                transform: translateX(-50%);
+                width: 24px;
+                height: 24px;
+                font-size: 11px;
+                flex-shrink: 0;
+            }
+            .step-dot.active {
+                background-color: #8D1739 !important;
+                color: white !important;
+                border: none !important;
+            }
+            .step-dot.inactive {
+                background-color: #EFEADD;
+                color: #000;
+                border: 1.5px solid #000;
+            }
+            .step-text {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 14.57px;
+                line-height: 14.57px;
+                max-width: 120px;
+            }
+
+            .step-item.right-text .step-text {
+                left: calc(40% + 40px);
+                right: auto;
+                text-align: left;
+            }
+
+            .step-item.left-text .step-text {
+                right: calc(60% + 40px);
+                left: auto;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="step-indicator-section" id="stepSection">
+        <div class="steps-container">
+            <div class="connector-line"></div>
+            <div class="step-item right-text" data-step="1">
+                <div class="step-dot active" id="stepDot1">1</div>
+                <div class="step-text">Branchez</div>
+            </div>
+
+            <div class="step-item left-text" data-step="2">
+                <div class="step-dot inactive" id="stepDot2">2</div>
+                <div class="step-text">Choisissez<br>parmi 20 000 classiques</div>
+            </div>
+
+            <div class="step-item right-text" data-step="3">
+                <div class="step-dot inactive" id="stepDot3">3</div>
+                <div class="step-text">Jouez</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        (function() {
+            function updateSection(section, index) {
+                const items = section.querySelectorAll('.step-item');
+                const dots = [];
+                items.forEach(item => {
+                    const dot = item.querySelector('.step-dot');
+                    if (dot) dots.push(dot);
+                });
+
+                if (items.length === 0 || dots.length === 0) return;
+
+                const triggerLine = window.innerHeight * 0.6;
+                let activeConfig = [true, false, false];
+
+                items.forEach((item, i) => {
+                    const rect = item.getBoundingClientRect();
+                    const passedTrigger = rect.top < triggerLine;
+
+                    if (i === 1 && passedTrigger) activeConfig[1] = true;
+                    if (i === 2 && passedTrigger) activeConfig[2] = true;
+                });
+
+                if (activeConfig[2]) activeConfig[1] = true;
+
+                dots.forEach((dot, i) => {
+                    if (!dot) return;
+                    const isActive = activeConfig[i];
+                    
+                    if (isActive) {
+                        dot.classList.add('active');
+                        dot.classList.remove('inactive');
+                    } else {
+                        dot.classList.remove('active');
+                        dot.classList.add('inactive');
+                    }
+                });
+            }
+
+            function checkAllInstances() {
+                const sections = document.querySelectorAll('.step-indicator-section');
+                sections.forEach((section, index) => {
+                    updateSection(section, index);
+                });
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                checkAllInstances();
+            }, { rootMargin: '0px', threshold: [0, 0.25, 0.5, 0.75, 1.0] });
+
+            function initObservers() {
+                const sections = document.querySelectorAll('.step-indicator-section');
+                sections.forEach(section => {
+                    const items = section.querySelectorAll('.step-item');
+                    items.forEach(item => observer.observe(item));
+                });
+            }
+
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        checkAllInstances();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+            
+            setInterval(checkAllInstances, 500);
+            
+            setTimeout(() => {
+                initObservers();
+                checkAllInstances();
+            }, 100);
+            
+            setTimeout(() => {
+                initObservers();
+                checkAllInstances();
+            }, 1000);
+
+            window.addEventListener('resize', checkAllInstances);
+        })();
+    </script>
+</body>
+</html>
+```

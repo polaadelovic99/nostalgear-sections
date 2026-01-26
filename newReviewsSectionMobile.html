@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        .nr-section {
+            width: 100%;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            background-color: transparent;
+        }
+
+        .nr-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1460px; 
+            margin: 0 auto;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .nr-container.active {
+            cursor: grabbing;
+            scroll-snap-type: none;
+        }
+
+        .nr-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nr-card {
+            position: relative;
+            flex: 0 0 400px;        
+            scroll-snap-align: start;
+            width: auto;
+            height: 473px;
+            border-radius: 13px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 32px;
+            box-sizing: border-box;
+            color: #000;
+            background-image: url('https://sub.nostalgear.fr/wp-content/uploads/2025/12/Rectangle-32.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 473px;
+            height: auto;
+            transition: all 0.3s ease;
+        }
+
+
+        .nr-card-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            height: 100%;
+        }
+
+        .nr-card-header {
+            display: flex;
+            align-items: center;
+            gap: 38px;
+        }
+
+        .nr-avatar {
+            width: 116px;
+            height: 116px;
+            border-radius: 7px !important;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .nr-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; 
+            -webkit-user-drag: none;
+        }
+
+        .nr-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nr-user-name {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .nr-stars {
+            display: flex;
+            gap: 5px;
+        }
+
+        .nr-stars-img {
+            height: 24px;
+            width: auto;
+            display: block;
+        }
+
+        .nr-review-body {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nr-quote-icon {
+           font-size: 60px;
+           line-height: 1;
+           font-family: serif;
+           margin-bottom: -20px;
+           display: block;
+        }
+        
+        .nr-quote-img {
+            width: 26px;
+            height: 21px;
+            display: block;
+        }
+
+        .nr-review-text {
+            font-family: 'Genova', sans-serif;
+            font-size: 20px;
+            line-height: 1.2;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: max-height 0.3s ease;
+        }
+
+        .nr-card.expanded {
+            height: auto !important;
+        }
+
+        .nr-card.expanded .nr-review-text {
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+        }
+
+        .nr-read-more-btn {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            cursor: pointer;
+            margin-top: auto;
+            padding-top: 20px;
+            align-self: flex-end;
+            width: 100%;
+        }
+
+        .nr-read-more-text {
+            color: #f75200;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+        }
+
+        .nr-card.expanded .nr-read-more-icon {
+            transform: rotate(180deg);
+        }
+
+        .nr-read-more-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .nr-read-more-icon svg {
+             width: 100%;
+             height: 100%;
+        }
+        
+        @media (min-width: 1025px) {
+            .nr-section {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .nr-container {
+                display: flex;
+                grid-template-columns: unset;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                gap: 20px;
+                padding-bottom: 20px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .nr-container::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .nr-card {
+                flex: 0 0 calc(50% - 10px);
+                width: calc(50% - 10px);
+                scroll-snap-align: start;
+                height: auto;
+                min-height: 473px;
+                margin-right: 0;
+                padding: 24px;
+                padding-bottom: 40px;
+                align-self: flex-start;
+            }
+
+            .nr-card-header {
+                flex-direction: row;
+                align-items: center;
+                text-align: left;
+                gap: 20px;
+                width: 100%;
+                margin-bottom: 0px;
+                flex-shrink: 0;
+            }
+
+            .nr-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .nr-user-info {
+                align-items: flex-start;
+                width: auto;
+                flex: 1;
+            }
+
+            .nr-user-name {
+                font-size: 20px;
+                white-space: normal;
+                line-height: 1.2;
+            }
+
+            .nr-stars-img {
+                height: 20px;
+            }
+            
+            .nr-card-content {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                gap: 20px;
+            }
+
+            .nr-review-body {
+                margin-top: 10px;
+            }
+
+            .nr-read-more-btn {
+                margin-top: 15px;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .nr-card {
+                flex: 0 0 85%;
+                width: 85%;
+                scroll-snap-align: center;
+                min-height: 450px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<section class="nr-section">
+    <div class="nr-container">
+        <!-- Card 1 -->
+        <div class="nr-card">
+
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <!-- Placeholder Avatar -->
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1737121715__1737121710010-img_6365__original.jpeg" alt="Germain D.">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">FLORIAN BARONE</h3>
+                        <div class="nr-stars">
+                             <!-- 5 Stars Image -->
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+Je me permets d’écrire un avis déjà pour remercier le président de la société car après un petit problème qui a été résolu rapidement ,j’ai reçu ma console en très bon état de marche, ce qui est incroyable c’est que l’on retombe directement dans notre enfance car les jeux sont de très bonne qualité ,la console ne prend pas trop de place ,elle est très discrète et il y a de quoi faire .
+Il faut savoir dire quand une société est fiable et je confirme que la société nostal gear et totalement fiable
+Merci encore pour votre suivi
+Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
+                        <span class="nr-read-more-text">Avis</span>
+                        <div class="nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="nr-card">
+
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1740582917__1000022178__original.jpg" alt="Fabien R.">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">Loïc Lenarduzzi</h3>
+                        <div class="nr-stars">
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+                        Beaucoup de jeux, en français et fluide. Certes c'est un investissement, mais cela en vaut la peine !                    </p>
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
+                        <span class="nr-read-more-text">Avis</span>
+                        <div class="nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="nr-card">
+
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1741280065__1741280055504-img_20250306_174436__original.jpg" alt="Germain D.">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">Mickaël Fougeray</h3>
+                        <div class="nr-stars">
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+                        Salut à tous, je souhaite signaler que la console fonctionne super bien. Je l'ai reçu dans le délai de livraison estimée (la console et les 4 manettes) et j'étais super heureux de la recevoir. Je passe mon temps à rejouer à de vieux jeux pokémon ça me rend tellement nostalgique 🤩
+                    </p>
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
+                        <span class="nr-read-more-text">Avis</span>
+                        <div class="nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="nr-card">
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1743413443__1743413427737-20250331_112912__original.jpg" alt="Leniere Vincent">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">Leniere Vincent</h3>
+                        <div class="nr-stars">
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+                        Super de jouer à des jeux vidéos enfances merci nostalgear
+                    </p>
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
+                        <span class="nr-read-more-text">Avis</span>
+                        <div class="nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="nr-card">
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1747821629__1747821624254-20250514_154608__original.jpg" alt="gilles lambotte">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">gilles lambotte</h3>
+                        <div class="nr-stars">
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+                        Produit conforme par rapport à la description très facile à jouer très maniable plus qu'à attendre la nouvelle manette pro qui est en rupture de stock et du coup ils m'ont dit qu'il m'enverrait la manette dès qu'ils ont reçu le stock encore merci pour tout
+                    </p>
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
+                        <span class="nr-read-more-text">Avis</span>
+                        <div class="nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+         <div class="nr-card">
+            <div class="nr-card-content">
+                <div class="nr-card-header">
+                    <div class="nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1753134908__1753134880920-pxl_20250721_214927122mp__original.jpg" alt="Anthony LE">
+                    </div>
+                    <div class="nr-user-info">
+                        <h3 class="nr-user-name">Anthony LE</h3>
+                        <div class="nr-stars">
+                             <img src="https://sub.nostalgear.fr/wp-content/uploads/2025/12/Frame-182.png" alt="5 stars" class="nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="nr-review-body">
+                    <svg class="nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="nr-review-text">
+                        Très bonne console rétro !!
+                    </p>
+                    <div class="nr-read-more-btn" onclick="nrToggleReview(this)">
+                        <span class="nr-read-more-text">Avis</span>
+                        <div class="nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </section>
+
+<script>
+    (function() {
+        function nrToggleReview(button) {
+            const card = button.closest('.nr-card');
+            card.classList.toggle('expanded');
+        }
+        window.nrToggleReview = nrToggleReview;
+
+        function nrCheckOverflow() {
+            const texts = document.querySelectorAll('.nr-review-text');
+            texts.forEach(text => {
+                const btn = text.parentElement.querySelector('.nr-read-more-btn');
+                if (btn) {
+                    if (text.scrollHeight > text.clientHeight + 1) {
+                        btn.style.display = 'flex';
+                    } else {
+                        btn.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function nrInitDragScroll() {
+            const nrSlider = document.querySelector('.nr-container');
+            if (!nrSlider) return;
+
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            nrSlider.addEventListener('dragstart', (e) => e.preventDefault());
+
+            nrSlider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                nrSlider.classList.add('active');
+                startX = e.pageX - nrSlider.offsetLeft;
+                scrollLeft = nrSlider.scrollLeft;
+            });
+
+            nrSlider.addEventListener('mouseleave', () => {
+                isDown = false;
+                nrSlider.classList.remove('active');
+            });
+
+            nrSlider.addEventListener('mouseup', () => {
+                isDown = false;
+                nrSlider.classList.remove('active');
+            });
+
+            nrSlider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - nrSlider.offsetLeft;
+                const walk = (x - startX) * 2;
+                nrSlider.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            nrCheckOverflow();
+            nrInitDragScroll();
+        });
+        
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            nrCheckOverflow();
+            nrInitDragScroll();
+        }
+        
+        window.addEventListener('load', nrCheckOverflow);
+        window.addEventListener('resize', nrCheckOverflow);
+    })();
+</script>
+
+</body>
+</html>
