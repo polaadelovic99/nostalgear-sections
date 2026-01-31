@@ -7,7 +7,6 @@
             position: relative;
             width: 100%;
             max-width: 1920px;
-            margin: 0 auto;
             background: transparent;
             overflow: hidden; 
         }
@@ -88,7 +87,6 @@
             visibility: hidden;
         }
 
-        /* Main Video - Full width before/after video */
         .comparison-video {
             position: absolute;
             top: 0;
@@ -153,8 +151,8 @@
 
         @media (max-width: 480px) {
             .play-button {
-                width: 60px;
-                height: 60px;
+                width: 40px;
+                height: 40px;
             }
         }
     </style>
@@ -175,7 +173,6 @@
                     <!-- Video with poster attribute -->
                     <video 
                         class="comparison-video" 
-                        id="comparisonVideo" 
                         muted 
                         loop 
                         playsinline 
@@ -189,7 +186,7 @@
             </div>
 
             <div class="frame-overlay"></div>
-            <button class="play-button" id="playButton" aria-label="Play video">
+            <button class="play-button" aria-label="Play video">
                 <svg width="182" height="182" viewBox="0 0 182 182" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="90.8621" cy="90.8621" r="88.3621" fill="white" stroke="#EA0F09" stroke-width="5"/>
                     <path d="M122.574 111.726H110.031V125.424H97.3188V139.276H84.6069V139.275H72.6948V112.545H85.4067V125.422H97.3179V111.568H109.862V97.8711H122.574V111.726ZM72.6938 114.489H59.9819V66.0146H72.6938V114.489ZM135.455 97.873H122.743V84.2705H135.455V97.873ZM122.744 84.0156H110.032V70.1602H122.744V84.0156ZM97.3188 56.3066H110.031V70.1611H97.3179V56.3066H85.4067V69.1348H72.6948V42.4521H84.6069V42.4512H97.3188V56.3066Z" fill="#EA0F09"/>
@@ -200,72 +197,92 @@
 
     <script>
         (function() {
-            const customTvPlayButton = document.getElementById('playButton');
-            const customComparisonVideo = document.getElementById('comparisonVideo');
-            const videoPlaceholder = document.querySelector('.video-placeholder');
+            // Find all instances of the section to handle duplicate desktop/mobile versions
+            const sections = document.querySelectorAll('.tv-comparison-section');
             
-            if (customTvPlayButton && customComparisonVideo) {
-                customTvPlayButton.addEventListener('click', function() {
-                    const playPromise = customComparisonVideo.play();
+            sections.forEach((section, index) => {
+                const customTvPlayButton = section.querySelector('.play-button');
+                const customComparisonVideo = section.querySelector('.comparison-video');
+                const videoPlaceholder = section.querySelector('.video-placeholder');
 
-                    if (playPromise !== undefined) {
-                        playPromise
-                            .then(() => {
-                                // Hide placeholder when video starts playing
-                                if (videoPlaceholder) {
-                                    videoPlaceholder.classList.add('hidden');
-                                }
-                            })
-                            .catch(error => {
-                                console.log('Video autoplay prevented:', error);
-                            });
-                    }
-
-                    customTvPlayButton.classList.add('playing');
-                });
-
-                customComparisonVideo.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (!customComparisonVideo.paused) {
-                        customComparisonVideo.pause();
-                        customTvPlayButton.classList.remove('playing');
-                    }
-                });
-
-                customComparisonVideo.addEventListener('ended', function() {
-                    if (!customComparisonVideo.loop) {
-                        customTvPlayButton.classList.remove('playing');
-                    }
-                });
-
-                // Show placeholder when video is paused
-                customComparisonVideo.addEventListener('pause', function() {
-                    customTvPlayButton.classList.remove('playing');
-                    if (videoPlaceholder) {
-                        videoPlaceholder.classList.remove('hidden');
-                    }
-                });
-
-                // Hide placeholder when video plays
-                customComparisonVideo.addEventListener('play', function() {
-                    customTvPlayButton.classList.add('playing');
-                    if (videoPlaceholder) {
-                        videoPlaceholder.classList.add('hidden');
-                    }
-                });
-
-                document.addEventListener('keydown', function(e) {
-                    if (e.code === 'Space' && e.target === document.body) {
-                        e.preventDefault();
+                if (customTvPlayButton && customComparisonVideo) {
+                    
+                    function toggleVideo(source) {
                         if (customComparisonVideo.paused) {
-                            customTvPlayButton.click();
+                            const playPromise = customComparisonVideo.play();
+                            if (playPromise !== undefined) {
+                                playPromise
+                                    .then(() => {
+                                        customTvPlayButton.classList.add('playing');
+                                        // Hide placeholder when video starts playing
+                                        if (videoPlaceholder) {
+                                            videoPlaceholder.classList.add('hidden');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.log('Video autoplay prevented:', error);
+                                    });
+                            }
                         } else {
                             customComparisonVideo.pause();
                             customTvPlayButton.classList.remove('playing');
                         }
                     }
-                });
-            }
+
+                    // Handle click on play button
+                    customTvPlayButton.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        toggleVideo('button click');
+                    });
+
+                    // Handle touch on play button (specifically for mobile responsiveness)
+                    customTvPlayButton.addEventListener('touchstart', function(e) {
+                        e.stopPropagation();
+                        // Prevent default to avoid double-firing with click if browser fires both
+                        e.preventDefault(); 
+                        toggleVideo('button touchstart');
+                    }, { passive: false });
+
+                    // Handle click on video itself to toggle play/pause
+                    customComparisonVideo.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        toggleVideo('video click');
+                    });
+
+                    customComparisonVideo.addEventListener('ended', function() {
+                        if (!customComparisonVideo.loop) {
+                            customTvPlayButton.classList.remove('playing');
+                        }
+                    });
+                    
+                    // Update button state if video is paused/played by other means (e.g. browser controls)
+                    customComparisonVideo.addEventListener('pause', function() {
+                         customTvPlayButton.classList.remove('playing');
+                         // Show placeholder when video is paused
+                         if (videoPlaceholder) {
+                             videoPlaceholder.classList.remove('hidden');
+                         }
+                    });
+                    
+                    customComparisonVideo.addEventListener('play', function() {
+                         customTvPlayButton.classList.add('playing');
+                         // Hide placeholder when video plays
+                         if (videoPlaceholder) {
+                             videoPlaceholder.classList.add('hidden');
+                         }
+                    });
+
+                    document.addEventListener('keydown', function(e) {
+                        // Check if the video is visible before handling global keys
+                         if (section.offsetParent === null) return;
+
+                        if (e.code === 'Space' && e.target === document.body) {
+                            e.preventDefault();
+                            toggleVideo('spacebar');
+                        }
+                    });
+                }
+            });
         })();
     </script>
 </body>
