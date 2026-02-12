@@ -10,13 +10,15 @@
             margin: 0 auto;
             background: transparent;
             overflow: hidden; 
+            margin-bottom: 2rem;
+            clear: both;
         }
 
-        /* Frame Container */
+        /* Frame Container - Aspect Ratio calculated from image 1541x1009 (approx 3:2) */
         .frame-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; 
+            padding-bottom: 65.48%; /* 1009 / 1541 * 100 */
             background-color: transparent;
             overflow: hidden;
         }
@@ -52,12 +54,12 @@
             --video-height: 100%; 
         }
 
-        /* Single Video Container - Positioned to match screen area */
+        /* Single Video Container - Positioned to match screen area within the frame image */
         .video-container {
             position: absolute;
             top: 9.5%;
-            left: 15.5%;
-            width: 59%;
+            left: 9.9%;
+            width: 68.7%;
             height: 81%;
             overflow: hidden;
             display: flex;

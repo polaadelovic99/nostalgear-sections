@@ -566,9 +566,6 @@
                 /* Hide vertical scrollbar */
                 -ms-overflow-style: none;  /* IE and Edge */
                 scrollbar-width: none;  /* Firefox */
-                /* Disable all touch/pointer scrolling on mobile */
-                touch-action: none;
-                -webkit-overflow-scrolling: auto;
             }
             .competitors-scroll::-webkit-scrollbar {
                 display: none; /* Chrome, Safari and Opera */
@@ -881,19 +878,57 @@
                 }
             });
 
-            // Prevent touch scrolling on mobile - only buttons should work
-            competitorsScroll.addEventListener('touchmove', function(e) {
-                if (window.innerWidth <= 1200) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
+            // Touch/swipe support for mobile - vertical scrolling within competitors column
+            let touchStartY = 0;
+            let touchStartX = 0;
+            let touchEndY = 0;
+            let touchEndX = 0;
 
-            // Prevent mouse wheel scrolling on mobile
-            competitorsScroll.addEventListener('wheel', function(e) {
-                if (window.innerWidth <= 1200) {
-                    e.preventDefault();
+            competitorsScroll.addEventListener('touchstart', function(e) {
+                touchStartY = e.changedTouches[0].screenY;
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            competitorsScroll.addEventListener('touchend', function(e) {
+                touchEndY = e.changedTouches[0].screenY;
+                touchEndX = e.changedTouches[0].screenX;
+                handleVerticalSwipe();
+            }, { passive: true });
+
+            function handleVerticalSwipe() {
+                const swipeThreshold = 50;
+                const diffY = touchStartY - touchEndY;
+                const diffX = Math.abs(touchStartX - touchEndX);
+
+                // Only handle vertical swipe if vertical movement is greater than horizontal
+                if (Math.abs(diffY) > swipeThreshold && Math.abs(diffY) > diffX) {
+                    if (diffY > 0 && currentIndex < maxIndex) {
+                        // Swipe up - next competitor
+                        scrollToIndex(currentIndex + 1);
+                    } else if (diffY < 0 && currentIndex > 0) {
+                        // Swipe down - previous competitor
+                        scrollToIndex(currentIndex - 1);
+                    }
                 }
-            }, { passive: false });
+            }
+
+            // On mobile, use native scrolling for competitors instead of transform
+            function updateScrollMethod() {
+                const isMobile = window.innerWidth <= 1200;
+                if (isMobile) {
+                    // On mobile, let native scrolling handle it
+                    competitorsWrapper.style.transform = 'none';
+                    competitorsScroll.style.overflowY = 'auto';
+                } else {
+                    // On desktop, use transform for smooth animation
+                    competitorsScroll.style.overflowY = 'hidden';
+                    scrollToIndex(currentIndex);
+                }
+            }
+
+            // Update on resize
+            window.addEventListener('resize', updateScrollMethod);
+            updateScrollMethod();
 
             // Initialize
             updateArrows();
@@ -911,8 +946,17 @@
                     scrollToIndex = function(index) {
                         if (index < 0 || index > maxIndex) return;
                         currentIndex = index;
-                        const translateY = -index * cardHeightActual;
-                        competitorsWrapper.style.transform = `translateY(${translateY}px)`;
+                        const isMobile = window.innerWidth <= 1200;
+                        
+                        if (isMobile) {
+                            const card = competitorsWrapper.children[index];
+                            if (card) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        } else {
+                            const translateY = -index * cardHeightActual;
+                            competitorsWrapper.style.transform = `translateY(${translateY}px)`;
+                        }
                         updateArrows();
                     };
                 }

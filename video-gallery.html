@@ -42,15 +42,16 @@
 
 
 
-        .video-card video {
+        .video-card iframe {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 107.86%;
-            height: 126.42%;
+            width: 100%;
+            height: 100%;
             max-width: none;
-            object-fit: cover;
+            border: none;
+            z-index: 1;
         }
 
         .video-card .thumbnail {
@@ -211,51 +212,63 @@
     <div class="gallery-container">
         <div class="video-gallery" id="videoGallery">
             <!-- Video Card 1 -->
-            <div class="video-card" data-video-id="1">
-                <img class="thumbnail" src="https://plutonagency.com/pola/wp-content/uploads/2026/02/Screenshot-2025-11-05-at-17.55.00-1.png" alt="Video 1 Thumbnail">
-                <video preload="metadata">
-                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <div class="video-card" data-video-id="1" data-youtube-id="PGv_Qxs9GK0">
+                <img class="thumbnail" src="https://plutonagency.com/pola/wp-content/uploads/2026/02/loicgamingtv.jpg" alt="Video 1 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
                 <div class="play-button">
                     <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
                         <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
                     </svg>
                 </div>
-                <div class="timestamp">3:32</div>
+                <div class="timestamp">11:10</div>
             </div>
 
             <!-- Video Card 2 -->
-            <div class="video-card" data-video-id="2">
-                <img class="thumbnail" src="https://plutonagency.com/pola/wp-content/uploads/2026/02/Screenshot-2025-11-05-at-17.53.09-1.png" alt="Video 2 Thumbnail">
-                <video preload="metadata">
-                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <div class="video-card" data-video-id="2" data-youtube-id="Pt_PB_RB6EI">
+                <img class="thumbnail" src="https://plutonagency.com/pola/wp-content/uploads/2026/02/neo77testeur.jpg" alt="Video 2 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
                 <div class="play-button">
                     <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
                         <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
                     </svg>
                 </div>
-                <div class="timestamp">11:21</div>
+                <div class="timestamp">41:22</div>
             </div>
 
             <!-- Video Card 3 -->
-            <div class="video-card" data-video-id="3">
-                <img class="thumbnail" src="https://plutonagency.com/pola/wp-content/uploads/2026/02/Screenshot-2025-11-05-at-17.55.00-1.png" alt="Video 3 Thumbnail">
-                <video preload="metadata">
-                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <div class="video-card" data-video-id="3" data-youtube-id="kvLrPIiVCrI">
+                <img class="thumbnail" src="https://plutonagency.com/pola/wp-content/uploads/2026/02/Neo77testeur-retour-apres-plusieurs-mois-dutilisation.jpg" alt="Video 3 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
                 <div class="play-button">
                     <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
                         <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
                     </svg>
                 </div>
-                <div class="timestamp">3:32</div>
+                <div class="timestamp">13:27</div>
             </div>
         </div>
     </div>
@@ -264,37 +277,76 @@
         (function() {
             'use strict';
 
-            // Get all video cards
+            const videoGallery = document.getElementById('videoGallery');
             const videoCards = document.querySelectorAll('.video-card');
 
-            // Video play/pause functionality
+            // Drag to scroll functionality for desktop
+            let isDragging = false;
+            let startX;
+            let scrollLeft;
+
+            videoGallery.addEventListener('mousedown', function(e) {
+                // Don't start dragging if clicking on play button or video card
+                if (e.target.closest('.play-button') || e.target.closest('.video-card')) {
+                    return;
+                }
+                isDragging = true;
+                videoGallery.style.cursor = 'grabbing';
+                startX = e.pageX - videoGallery.offsetLeft;
+                scrollLeft = videoGallery.scrollLeft;
+            });
+
+            videoGallery.addEventListener('mouseleave', function() {
+                isDragging = false;
+                videoGallery.style.cursor = 'grab';
+            });
+
+            videoGallery.addEventListener('mouseup', function() {
+                isDragging = false;
+                videoGallery.style.cursor = 'grab';
+            });
+
+            videoGallery.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - videoGallery.offsetLeft;
+                const walk = (x - startX) * 2; // Scroll speed multiplier
+                videoGallery.scrollLeft = scrollLeft - walk;
+            });
+
+            // Set initial cursor
+            videoGallery.style.cursor = 'grab';
+
+            // Get all video cards
+
+            // YouTube video play functionality
             videoCards.forEach(card => {
-                const video = card.querySelector('video');
+                const iframe = card.querySelector('iframe');
                 const playButton = card.querySelector('.play-button');
+                const thumbnail = card.querySelector('.thumbnail');
+                const youtubeId = card.dataset.youtubeId;
                 let isPlaying = false;
 
-                // Play/Pause functionality
-                function togglePlay() {
+                // Play/Stop toggle functionality
+                function toggleVideo() {
                     if (isPlaying) {
-                        video.pause();
+                        // Stop the video
+                        iframe.src = '';
                         card.classList.remove('playing');
-                        playButton.classList.remove('playing');
                         isPlaying = false;
-                    } else {
-                        // Pause all other videos
+                    } else if (youtubeId) {
+                        // Stop all other videos
                         videoCards.forEach(otherCard => {
-                            const otherVideo = otherCard.querySelector('video');
-                            const otherButton = otherCard.querySelector('.play-button');
-                            if (otherVideo !== video) {
-                                otherVideo.pause();
+                            if (otherCard !== card) {
+                                const otherIframe = otherCard.querySelector('iframe');
+                                otherIframe.src = '';
                                 otherCard.classList.remove('playing');
-                                otherButton.classList.remove('playing');
                             }
                         });
 
-                        video.play();
+                        // Load and play this video
+                        iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
                         card.classList.add('playing');
-                        playButton.classList.add('playing');
                         isPlaying = true;
                     }
                 }
@@ -302,40 +354,12 @@
                 // Click on play button
                 playButton.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    togglePlay();
+                    toggleVideo();
                 });
 
                 // Click on card
                 card.addEventListener('click', function() {
-                    togglePlay();
-                });
-
-                // Video ended event
-                video.addEventListener('ended', function() {
-                    card.classList.remove('playing');
-                    playButton.classList.remove('playing');
-                    isPlaying = false;
-                    video.currentTime = 0;
-                });
-
-                // Show play button when video is paused
-                video.addEventListener('pause', function() {
-                    if (!video.ended) {
-                        setTimeout(() => {
-                            if (video.paused) {
-                                card.classList.remove('playing');
-                                playButton.classList.remove('playing');
-                                isPlaying = false;
-                            }
-                        }, 100);
-                    }
-                });
-
-                // Hide play button when video is playing
-                video.addEventListener('play', function() {
-                    card.classList.add('playing');
-                    playButton.classList.add('playing');
-                    isPlaying = true;
+                    toggleVideo();
                 });
 
                 // Keyboard accessibility
@@ -346,17 +370,18 @@
                 card.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        togglePlay();
+                        toggleVideo();
                     }
                 });
             });
 
-            // Pause all videos when user leaves the page
+            // Stop all videos when user leaves the page
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) {
                     videoCards.forEach(card => {
-                        const video = card.querySelector('video');
-                        video.pause();
+                        const iframe = card.querySelector('iframe');
+                        iframe.src = '';
+                        card.classList.remove('playing');
                     });
                 }
             });
