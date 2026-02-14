@@ -81,8 +81,52 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            pointer-events: none; 
+            cursor: pointer;
             -webkit-user-drag: none;
+        }
+
+        /* Modal Styles */
+        .Des-nr-modal {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .Des-nr-modal-content {
+            margin: auto;
+            display: block;
+            width: auto;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .Des-nr-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .Des-nr-modal-close:hover,
+        .Des-nr-modal-close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .Des-nr-user-info {
@@ -406,6 +450,12 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
 
         </section>
 
+        <!-- The Modal -->
+        <div id="DesNrModal" class="Des-nr-modal">
+          <span class="Des-nr-modal-close">&times;</span>
+          <img class="Des-nr-modal-content" id="DesNrModalImg">
+        </div>
+
 <script>
     (function() {
         function DesNrToggleReview(button) {
@@ -464,17 +514,48 @@ Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
             });
         }
 
+        function DesNrInitModal() {
+            const modal = document.getElementById("DesNrModal");
+            const modalImg = document.getElementById("DesNrModalImg");
+            const closeBtn = document.querySelector(".Des-nr-modal-close");
+            const avatars = document.querySelectorAll('.Des-nr-avatar img');
+
+            if (!modal || !modalImg || !closeBtn) return;
+
+            avatars.forEach(img => {
+                img.addEventListener('click', function(e) {
+                    modal.style.display = "flex";
+                    modalImg.src = this.src;
+                });
+            });
+
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             DesNrCheckOverflow();
             DesNrInitDragScroll();
+            DesNrInitModal();
         });
         
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             DesNrCheckOverflow();
             DesNrInitDragScroll();
+            DesNrInitModal();
         }
         
-        window.addEventListener('load', DesNrCheckOverflow);
+        window.addEventListener('load', () => {
+             DesNrCheckOverflow();
+             DesNrInitModal();
+        });
         window.addEventListener('resize', DesNrCheckOverflow);
     })();
 </script>
