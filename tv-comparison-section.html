@@ -1,108 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
     <style>
-
         .tv-comparison-section {
             position: relative;
             width: 100%;
             max-width: 1920px;
             margin: 0 auto;
             background: transparent;
-            overflow: hidden; 
             margin-bottom: 2rem;
             clear: both;
         }
 
-        /* Frame Container - Aspect Ratio calculated from image 1541x1009 (approx 3:2) */
-        .frame-container {
-            position: relative;
+        .tv-image {
             width: 100%;
-            padding-bottom: 65.48%; /* 1009 / 1541 * 100 */
-            background-color: transparent;
-            overflow: hidden;
-        }
-
-
-        .videos-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            overflow: hidden; 
-        }
-
-
-        .frame-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://plutonagency.com/pola/wp-content/uploads/2025/12/Group-29-1.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            z-index: 10;
-            pointer-events: none; 
-        }
-
-        :root {
-            --video-width: 100%; 
-            --video-height: 100%; 
-        }
-
-        /* Single Video Container - Positioned to match screen area within the frame image */
-        .video-container {
-            position: absolute;
-            top: 9.5%;
-            left: 9.9%;
-            width: 68.7%;
-            height: 81%;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #000;
-        }
-
-        /* Video Placeholder Image */
-        .video-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-            object-position: center !important;
-            z-index: 2;
-            transition: opacity 0.3s ease;
+            height: auto;
             display: block;
-            max-width: none;
-            max-height: none;
         }
 
-        .video-placeholder.hidden {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
-        }
-
-        /* Main Video - Full width before/after video */
-        .comparison-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            z-index: 1;
-        }
-
-        /* Play Button - Centered Overlay */
+        /* Play Button */
         .play-button {
             position: absolute;
             top: 50%;
@@ -111,8 +24,8 @@
             width: 100px;
             height: 100px;
             cursor: pointer;
-            z-index: 20; /* Above frame overlay */
-            transition: transform 0.2s, opacity 0.3s;
+            z-index: 20;
+            transition: transform 0.2s;
             background: transparent;
             border: none;
             padding: 0;
@@ -120,22 +33,14 @@
 
         .play-button:hover {
             transform: translate(-50%, -50%) scale(1.1);
-            background: transparent;
         }
 
         .play-button:active {
             transform: translate(-50%, -50%) scale(0.95);
-            background: transparent;
         }
 
         .play-button:focus {
-            background: transparent;
             outline: none;
-        }
-
-        .play-button.playing {
-            opacity: 0;
-            pointer-events: none;
         }
 
         /* Play Button SVG */
@@ -145,11 +50,106 @@
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
         }
 
+        /* Video Modal/Popup */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            aspect-ratio: 16 / 9;
+        }
+
+        /* Close Button */
+        .close-modal {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 10001;
+            transition: transform 0.2s;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.1);
+        }
+
+        .close-modal::before,
+        .close-modal::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 3px;
+            background-color: #EA0F09;
+            transition: background-color 0.2s;
+        }
+
+        .close-modal::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .close-modal::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        .close-modal:hover::before,
+        .close-modal:hover::after {
+            background-color: #fff;
+        }
+
+        /* Modal Video */
+        .modal-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .play-button {
                 width: 80px;
                 height: 80px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .close-modal {
+                top: -45px;
+                width: 35px;
+                height: 35px;
+            }
+
+            .close-modal::before,
+            .close-modal::after {
+                width: 25px;
             }
         }
 
@@ -158,117 +158,104 @@
                 width: 60px;
                 height: 60px;
             }
+
+            .close-modal {
+                top: -40px;
+                width: 30px;
+                height: 30px;
+            }
+
+            .close-modal::before,
+            .close-modal::after {
+                width: 20px;
+                height: 2px;
+            }
         }
     </style>
-</head>
 <body>
     <section class="tv-comparison-section">
-        <div class="frame-container">
-            <!-- Videos Wrapper - Single video behind the frame -->
-            <div class="videos-wrapper">
-                <!-- Single Before/After Comparison Video -->
-                <div class="video-container">
-                    <!-- Placeholder Image -->
-                    <img 
-                        class="video-placeholder" 
-                        src="https://plutonagency.com/pola/wp-content/uploads/2026/01/TV1.png" 
-                        alt="Video Placeholder"
-                    >
-                    <!-- Video with poster attribute -->
-                    <video 
-                        class="comparison-video" 
-                        id="comparisonVideo" 
-                        muted 
-                        loop 
-                        playsinline 
-                        poster="https://plutonagency.com/pola/wp-content/uploads/2026/01/TV1.png"
-                    >
-                        <!-- Replace with your before/after comparison video URL -->
-                        <source src="https://plutonagency.com/pola/wp-content/uploads/2025/12/NostalGear-Avant-et-Apres-lamelioration-graphique-NostalGear™-Retrogaming-1080p-h264.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            </div>
+        <img 
+            class="tv-image" 
+            src="https://plutonagency.com/pola/wp-content/uploads/2026/02/TV2.png" 
+            alt="NostalGear TV Display"
+        >
 
-            <div class="frame-overlay"></div>
-            <button class="play-button" id="playButton" aria-label="Play video">
-                <svg width="182" height="182" viewBox="0 0 182 182" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="90.8621" cy="90.8621" r="88.3621" fill="white" stroke="#EA0F09" stroke-width="5"/>
-                    <path d="M122.574 111.726H110.031V125.424H97.3188V139.276H84.6069V139.275H72.6948V112.545H85.4067V125.422H97.3179V111.568H109.862V97.8711H122.574V111.726ZM72.6938 114.489H59.9819V66.0146H72.6938V114.489ZM135.455 97.873H122.743V84.2705H135.455V97.873ZM122.744 84.0156H110.032V70.1602H122.744V84.0156ZM97.3188 56.3066H110.031V70.1611H97.3179V56.3066H85.4067V69.1348H72.6948V42.4521H84.6069V42.4512H97.3188V56.3066Z" fill="#EA0F09"/>
-                </svg>
-            </button>
+        <!-- Play Button -->
+        <button class="play-button tv-play-btn" aria-label="Play video">
+            <svg width="182" height="182" viewBox="0 0 182 182" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="90.8621" cy="90.8621" r="88.3621" fill="white" stroke="#EA0F09" stroke-width="5"/>
+                <path d="M122.574 111.726H110.031V125.424H97.3188V139.276H84.6069V139.275H72.6948V112.545H85.4067V125.422H97.3179V111.568H109.862V97.8711H122.574V111.726ZM72.6938 114.489H59.9819V66.0146H72.6938V114.489ZM135.455 97.873H122.743V84.2705H135.455V97.873ZM122.744 84.0156H110.032V70.1602H122.744V84.0156ZM97.3188 56.3066H110.031V70.1611H97.3179V56.3066H85.4067V69.1348H72.6948V42.4521H84.6069V42.4512H97.3188V56.3066Z" fill="#EA0F09"/>
+            </svg>
+        </button>
+
+        <!-- Video Modal/Popup -->
+        <div class="video-modal tv-video-modal">
+        <div class="modal-content">
+            <button class="close-modal tv-close-btn" aria-label="Close video"></button>
+            <video 
+                class="modal-video tv-modal-video tv-exclude-overlay" 
+                controls
+                playsinline
+            >
+                <source src="https://plutonagency.com/pola/wp-content/uploads/2025/12/NostalGear-Avant-et-Apres-lamelioration-graphique-NostalGear™-Retrogaming-1080p-h264.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
+    </div>
     </section>
 
     <script>
         (function() {
-            const customTvPlayButton = document.getElementById('playButton');
-            const customComparisonVideo = document.getElementById('comparisonVideo');
-            const videoPlaceholder = document.querySelector('.video-placeholder');
+            const allSections = document.querySelectorAll('.tv-comparison-section');
             
-            if (customTvPlayButton && customComparisonVideo) {
-                customTvPlayButton.addEventListener('click', function() {
-                    const playPromise = customComparisonVideo.play();
-
-                    if (playPromise !== undefined) {
-                        playPromise
-                            .then(() => {
-                                // Hide placeholder when video starts playing
-                                if (videoPlaceholder) {
-                                    videoPlaceholder.classList.add('hidden');
-                                }
-                            })
-                            .catch(error => {
+            allSections.forEach(function(section) {
+                const playButton = section.querySelector('.tv-play-btn');
+                const videoModal = section.querySelector('.tv-video-modal');
+                const closeModal = videoModal ? videoModal.querySelector('.tv-close-btn') : null;
+                const modalVideo = videoModal ? videoModal.querySelector('.tv-modal-video') : null;
+                if (playButton && videoModal && modalVideo) {
+                    playButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        videoModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                        
+                        const playPromise = modalVideo.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(error => {
                                 console.log('Video autoplay prevented:', error);
                             });
-                    }
-
-                    customTvPlayButton.classList.add('playing');
-                });
-
-                customComparisonVideo.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (!customComparisonVideo.paused) {
-                        customComparisonVideo.pause();
-                        customTvPlayButton.classList.remove('playing');
-                    }
-                });
-
-                customComparisonVideo.addEventListener('ended', function() {
-                    if (!customComparisonVideo.loop) {
-                        customTvPlayButton.classList.remove('playing');
-                    }
-                });
-
-                // Show placeholder when video is paused
-                customComparisonVideo.addEventListener('pause', function() {
-                    customTvPlayButton.classList.remove('playing');
-                    if (videoPlaceholder) {
-                        videoPlaceholder.classList.remove('hidden');
-                    }
-                });
-
-                // Hide placeholder when video plays
-                customComparisonVideo.addEventListener('play', function() {
-                    customTvPlayButton.classList.add('playing');
-                    if (videoPlaceholder) {
-                        videoPlaceholder.classList.add('hidden');
-                    }
-                });
-
-                document.addEventListener('keydown', function(e) {
-                    if (e.code === 'Space' && e.target === document.body) {
-                        e.preventDefault();
-                        if (customComparisonVideo.paused) {
-                            customTvPlayButton.click();
-                        } else {
-                            customComparisonVideo.pause();
-                            customTvPlayButton.classList.remove('playing');
                         }
+                    });
+
+                    function closeVideoModal() {
+                        videoModal.classList.remove('active');
+                        document.body.style.overflow = '';
+                        modalVideo.pause();
+                        modalVideo.currentTime = 0;
                     }
-                });
-            }
+
+                    if (closeModal) {
+                        closeModal.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            closeVideoModal();
+                        });
+                    }
+
+                    videoModal.addEventListener('click', function(e) {
+                        if (e.target === videoModal) {
+                            closeVideoModal();
+                        }
+                    });
+
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+                            closeVideoModal();
+                        }
+                    });
+                }
+            });
         })();
     </script>
-</body>
-</html>
