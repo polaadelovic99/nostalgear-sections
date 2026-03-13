@@ -1,0 +1,267 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+    .Des-art-section {
+        width: 100%;
+        box-sizing: border-box;
+        background-color: transparent;
+    }
+
+    .Des-art-container {
+        display: flex;
+        gap: 30px;
+        max-width: 1460px; 
+        margin: 0 auto;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 20px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        cursor: grab;
+        user-select: none;
+        align-items: stretch;
+    }
+
+    .Des-art-container.active {
+        cursor: grabbing;
+        scroll-snap-type: none;
+    }
+
+    .Des-art-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .Des-art-card {
+        position: relative;
+        flex: 0 0 512px;        
+        scroll-snap-align: start;
+        width: auto;
+        border-radius: 26px;
+        border: 2px solid #000;
+        background-color: #F1E0C5;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        min-height: 435px;
+    }
+
+    .Des-art-card-img-container {
+        width: 100%;
+        height: 141px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 35px;
+    }
+
+    .Des-art-card-img-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        -webkit-user-drag: none;
+    }
+
+    .Des-art-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex-grow: 1;
+    }
+
+    .Des-art-title {
+        font-family: 'Genova', sans-serif;
+        font-weight: 500;
+        font-size: 20px;
+        color: #000;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .Des-art-text {
+        font-family: 'Genova', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+        color: #000;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .Des-art-link {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: auto;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .Des-art-link-text {
+        color: #F75200;
+        font-family: 'Genova', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+        letter-spacing: -0.8px;
+    }
+
+    .Des-art-link-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #F75200;
+    }
+
+    .Des-art-link-icon svg {
+        width: 16px;
+        height: 16px;
+        fill: #E3E3E3;
+    }
+    
+    @media (max-width: 1024px) {
+        .Des-art-section {
+            padding: 40px 20px 20px 20px;
+        }
+
+        .Des-art-card {
+            flex: 0 0 calc(50% - 15px);
+            width: calc(50% - 15px);
+            min-height: auto;
+            padding: 24px;
+            gap: 20px;
+        }
+
+        .Des-art-title, .Des-art-text, .Des-art-link-text {
+            font-size: 18px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .Des-art-card {
+            flex: 0 0 85%;
+            width: 85%;
+            scroll-snap-align: center;
+        }
+        
+        .Des-art-title, .Des-art-text, .Des-art-link-text {
+            font-size: 16px;
+        }
+    }
+</style>
+
+<section class="Des-art-section">
+    <div class="Des-art-container">
+        <!-- Card 1 -->
+        <div class="Des-art-card">
+            <div class="Des-art-card-img-container">
+                <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-1430102400.webp" alt="La Vision D'un Gamer Logo">
+            </div>
+            <div class="Des-art-card-content">
+                <h3 class="Des-art-title">"La console de NostalGear tient-elle ses promesses ?"</h3>
+                <p class="Des-art-text">"...La GearMaster s'impose comme une solution idéale pour les passionnés de retrogaming qui recherchent une expérience fluide, accessible et performante..."</p>
+                <a href="#" class="Des-art-link">
+                    <span class="Des-art-link-text">&nbsp;Consulter l'article</span>
+                    <div class="Des-art-link-icon">
+                       <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24.1019" height="24.1019" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                        <path d="M21.0878 14.0592L19.6567 12.6281L16.0666 16.2434V5.021H4.01562V7.02949H14.0581V16.2434L10.4428 12.6281L9.01174 14.0341L15.0623 20.0847L21.0878 14.0592Z" fill="#E3E3E3"/>
+                       </svg>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="Des-art-card">
+            <div class="Des-art-card-img-container">
+                <img src="https://nostalgear.fr/wp-content/uploads/2026/03/images-1.webp" alt="Band Of Geeks Logo">
+            </div>
+            <div class="Des-art-card-content">
+                <h3 class="Des-art-title">“Gearmaster : un retour en enfance réussi !”</h3>
+                <p class="Des-art-text">"Ce qui m’a plu dans la Gearmaster c’est vraiment sa proposition clé en main qui permet de jouer directement sans avoir à tout configurer en amont. La sélection de jeux...."</p>
+                <a href="#" class="Des-art-link">
+                    <span class="Des-art-link-text">&nbsp;Consulter l'article</span>
+                    <div class="Des-art-link-icon">
+                        <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="24.1019" height="24.1019" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                            <path d="M21.0878 14.0592L19.6567 12.6281L16.0666 16.2434V5.021H4.01562V7.02949H14.0581V16.2434L10.4428 12.6281L9.01174 14.0341L15.0623 20.0847L21.0878 14.0592Z" fill="#E3E3E3"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="Des-art-card">
+            <div class="Des-art-card-img-container">
+                <img src="https://nostalgear.fr/wp-content/uploads/2026/03/image-77-1.webp" alt="Comptoir Du Geek Logo">
+            </div>
+            <div class="Des-art-card-content">
+                <h3 class="Des-art-title">"Test console GearMaster"</h3>
+                <p class="Des-art-text">"...Entre l'optimisation de l'ergonomie et de l'esthétique des menus, le fait de trouver le plus possible de jeux en VF et de les optimiser pour que le rendu soit le meilleur possible, il y a eu pas mal d'heures passées..."</p>
+                <a href="#" class="Des-art-link">
+                    <span class="Des-art-link-text">&nbsp;Consulter l'article</span>
+                    <div class="Des-art-link-icon">
+                        <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="24.1019" height="24.1019" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                            <path d="M21.0878 14.0592L19.6567 12.6281L16.0666 16.2434V5.021H4.01562V7.02949H14.0581V16.2434L10.4428 12.6281L9.01174 14.0341L15.0623 20.0847L21.0878 14.0592Z" fill="#E3E3E3"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function() {
+        function DesArtInitDragScroll() {
+            const artSlider = document.querySelector('.Des-art-container');
+            if (!artSlider) return;
+
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            artSlider.addEventListener('dragstart', (e) => e.preventDefault());
+
+            artSlider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                artSlider.classList.add('active');
+                startX = e.pageX - artSlider.offsetLeft;
+                scrollLeft = artSlider.scrollLeft;
+            });
+
+            artSlider.addEventListener('mouseleave', () => {
+                isDown = false;
+                artSlider.classList.remove('active');
+            });
+
+            artSlider.addEventListener('mouseup', () => {
+                isDown = false;
+                artSlider.classList.remove('active');
+            });
+
+            artSlider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - artSlider.offsetLeft;
+                const walk = (x - startX) * 2;
+                artSlider.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+             DesArtInitDragScroll();
+        });
+        
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+             DesArtInitDragScroll();
+        }
+    })();
+</script>
