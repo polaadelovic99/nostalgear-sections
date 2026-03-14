@@ -1,0 +1,484 @@
+
+<head>
+    <style>
+        .gallery-container {
+            position: relative;
+            max-width: calc((570.237px * 2.5) + (39.158px * 2));
+            margin: 0 auto;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .video-gallery {
+            display: flex;
+            gap: 39.158px;
+            align-items: center;
+            padding: 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .video-gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        .video-card {
+            position: relative;
+            width: 570.237px;
+            height: 323.053px;
+            border: 2.447px solid #000000;
+            border-radius: 26.921px;
+            overflow: hidden;
+            background: #ffffff;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .video-card iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            border: none;
+            z-index: 1;
+        }
+
+        .video-card .thumbnail {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 107.86%;
+            height: 126.42%;
+            max-width: none;
+            object-fit: cover;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 82.729px;
+            height: 82.729px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .play-button svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .video-card.playing .play-button {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .video-card.playing .thumbnail {
+            opacity: 0;
+        }
+
+        .timestamp {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #ffffff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .nav-button {
+            display: block; 
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+            padding: 0;
+        }
+
+        .nav-button:hover, 
+        .nav-button:focus, 
+        .nav-button:active {
+            background: none !important;
+            outline: none;
+        }
+
+        .nav-button.prev {
+            left: 10px;
+        }
+
+        .nav-button.next {
+            right: 10px;
+        }
+
+        .nav-button svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-button.prev svg {
+            transform: rotate(-90deg);
+        }
+
+        .nav-button.next svg {
+            transform: rotate(90deg);
+        }
+
+        .nav-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        @media (max-width: 1800px) {
+            .gallery-container {
+                padding: 60px 0;
+            }
+
+            .video-gallery {
+                gap: 30px;
+                padding: 0 30px;
+            }
+
+            .video-card {
+                width: calc((100vw - 90px) / 2.5);
+                height: auto;
+                aspect-ratio: 570.237 / 323.053;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .video-card {
+                width: 450px;
+                height: 255px;
+            }
+
+            .play-button {
+                width: 65px;
+                height: 65px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .gallery-container {
+                padding: 40px 0;
+            }
+
+            .video-gallery {
+                gap: 20px;
+                padding: 0 20px;
+            }
+
+            .video-card {
+                width: 380px;
+                height: 215px;
+            }
+
+            .play-button {
+                width: 55px;
+                height: 55px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-container {
+                padding: 30px 0;
+            }
+
+            .video-gallery {
+                gap: 20px;
+                padding: 0 15px;
+            }
+
+            .video-card {
+                width: 320px;
+                height: 180px;
+            }
+
+            .play-button {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .nav-button {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-card {
+                width: 280px;
+                height: 158px;
+            }
+
+            .play-button {
+                width: 45px;
+                height: 45px;
+            }
+
+            .timestamp {
+                font-size: 12px;
+                padding: 3px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <button class="nav-button prev" id="prevBtn" aria-label="Previous">
+            <svg width="103" height="105" viewBox="0 0 103 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="102.368" y="104.833" width="102.368" height="104.833" rx="51.184" transform="rotate(-180 102.368 104.833)" fill="#150603"/>
+                <path d="M47.7105 38.5296L40.769 38.5296L40.769 31.5853L47.7105 31.5853L47.7105 24.641L54.6548 24.641L54.6548 80.1927L47.7104 80.1927L47.7105 38.5296ZM54.6558 31.5853L61.5991 31.5853L61.5991 38.5296L54.6558 38.5296L54.6558 31.5853ZM61.5991 38.5296L68.5435 38.5296L68.5435 45.473L61.5991 45.473L61.5991 38.5296ZM33.8237 38.5296L40.7681 38.5296L40.7681 45.473L33.8237 45.473L33.8237 38.5296ZM68.5435 45.474L75.4878 45.474L75.4878 52.4173L68.5435 52.4173L68.5435 45.474ZM26.8794 45.474L33.8237 45.474L33.8237 52.4173L26.8794 52.4173L26.8794 45.474Z" fill="#F75200"/>
+            </svg>
+        </button>
+
+        <div class="video-gallery" id="videoGallery">
+            <div class="video-card" data-video-id="1" data-youtube-id="PGv_Qxs9GK0">
+                <img class="thumbnail" src="https://nostalgear.fr/wp-content/uploads/2026/03/PGv_Qxs9GK0-HD.webp" alt="Video 1 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+                <div class="play-button">
+                    <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
+                        <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
+                    </svg>
+                </div>
+                <div class="timestamp">11:11</div>
+            </div>
+
+            <div class="video-card" data-video-id="2" data-youtube-id="Pt_PB_RB6EI">
+                <img class="thumbnail" src="https://nostalgear.fr/wp-content/uploads/2026/03/Pt_PB_RB6EI-HD.webp" alt="Video 2 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+                <div class="play-button">
+                    <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
+                        <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
+                    </svg>
+                </div>
+                <div class="timestamp">41:23</div>
+            </div>
+
+            <div class="video-card" data-video-id="3" data-youtube-id="kvLrPIiVCrI">
+                <img class="thumbnail" src="https://nostalgear.fr/wp-content/uploads/2026/03/kvLrPIiVCrI-SD.webp" alt="Video 3 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+                <div class="play-button">
+                    <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
+                        <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
+                    </svg>
+                </div>
+                <div class="timestamp">13:28</div>
+            </div>
+
+            <div class="video-card" data-video-id="4" data-youtube-id="BUuz3qqhtUg">
+                <img class="thumbnail" src="https://nostalgear.fr/wp-content/uploads/2026/03/BUuz3qqhtUg-SD.webp" alt="Video 4 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+                <div class="play-button">
+                    <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
+                        <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
+                    </svg>
+                </div>
+                <div class="timestamp">52:54</div>
+            </div>
+
+            <div class="video-card" data-video-id="5" data-youtube-id="a7y18N5GI84">
+                <img class="thumbnail" src="https://nostalgear.fr/wp-content/uploads/2026/03/a7y18N5GI84-HD.webp" alt="Video 5 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+                <div class="play-button">
+                    <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
+                        <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
+                    </svg>
+                </div>
+                <div class="timestamp">38:29</div>
+            </div>
+
+            <div class="video-card" data-video-id="6" data-youtube-id="eVyOLvvGkEc">
+                <img class="thumbnail" src="https://nostalgear.fr/wp-content/uploads/2026/03/eVyOLvvGkEc-HD.webp" alt="Video 6 Thumbnail">
+                <iframe 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+                <div class="play-button">
+                    <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="41.3645" cy="41.3645" r="40.1409" fill="white" stroke="#EA0F09" stroke-width="2.44737"/>
+                        <path d="M44.3042 25.6315H38.8813V31.4713H33.0942V51.234H38.8813V57.0963H44.3042V63.4039L38.5171 63.403H33.0942V52.1188H27.3071V30.0514H33.0942V19.3248H38.5171V19.3239H44.3042V25.6315ZM55.8013 50.861H50.0923V57.0973H44.3052V50.7897H50.0142V44.5533H55.8013V50.861ZM61.6655 44.5543H55.8784V38.3619H61.6655V44.5543ZM55.8794 38.2457H50.0923V31.9391H55.8794V38.2457ZM50.0923 31.9391H44.3052V25.6315H50.0923V31.9391Z" fill="#EA0F09"/>
+                    </svg>
+                </div>
+                <div class="timestamp">30:11</div>
+            </div>
+        </div>
+
+        <button class="nav-button next" id="nextBtn" aria-label="Next">
+            <svg width="103" height="105" viewBox="0 0 103 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="102.368" y="104.833" width="102.368" height="104.833" rx="51.184" transform="rotate(-180 102.368 104.833)" fill="#150603"/>
+                <path d="M47.7105 38.5296L40.769 38.5296L40.769 31.5853L47.7105 31.5853L47.7105 24.641L54.6548 24.641L54.6548 80.1927L47.7104 80.1927L47.7105 38.5296ZM54.6558 31.5853L61.5991 31.5853L61.5991 38.5296L54.6558 38.5296L54.6558 31.5853ZM61.5991 38.5296L68.5435 38.5296L68.5435 45.473L61.5991 45.473L61.5991 38.5296ZM33.8237 38.5296L40.7681 38.5296L40.7681 45.473L33.8237 45.473L33.8237 38.5296ZM68.5435 45.474L75.4878 45.474L75.4878 52.4173L68.5435 52.4173L68.5435 45.474ZM26.8794 45.474L33.8237 45.474L33.8237 52.4173L26.8794 52.4173L26.8794 45.474Z" fill="#F75200"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const videoGallery = document.getElementById('videoGallery');
+            const videoCards = document.querySelectorAll('.video-card');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            function updateButtonState() {
+                if (videoGallery.scrollLeft <= 5) {
+                    prevBtn.classList.add('disabled');
+                } else {
+                    prevBtn.classList.remove('disabled');
+                }
+
+                if (videoGallery.scrollLeft + videoGallery.clientWidth >= videoGallery.scrollWidth - 5) {
+                    nextBtn.classList.add('disabled');
+                } else {
+                    nextBtn.classList.remove('disabled');
+                }
+            }
+
+            function scrollGallery(direction) {
+                const cardWidth = videoCards[0].offsetWidth;
+                const gap = parseInt(window.getComputedStyle(videoGallery).gap) || 0;
+                const scrollAmount = cardWidth + gap;
+
+                if (direction === 'next') {
+                    videoGallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                } else {
+                    videoGallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                }
+            }
+
+            prevBtn.addEventListener('click', () => scrollGallery('prev'));
+            nextBtn.addEventListener('click', () => scrollGallery('next'));
+
+            videoGallery.addEventListener('scroll', updateButtonState);
+            window.addEventListener('resize', updateButtonState);
+
+            updateButtonState();
+
+            videoCards.forEach(card => {
+                const iframe = card.querySelector('iframe');
+                const playButton = card.querySelector('.play-button');
+                const thumbnail = card.querySelector('.thumbnail');
+                const youtubeId = card.dataset.youtubeId;
+                let isPlaying = false;
+
+                function toggleVideo() {
+                    if (isPlaying) {
+                        iframe.src = '';
+                        card.classList.remove('playing');
+                        isPlaying = false;
+                    } else if (youtubeId) {
+                        videoCards.forEach(otherCard => {
+                            if (otherCard !== card) {
+                                const otherIframe = otherCard.querySelector('iframe');
+                                otherIframe.src = '';
+                                otherCard.classList.remove('playing');
+                            }
+                        });
+
+                        iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+                        card.classList.add('playing');
+                        isPlaying = true;
+                    }
+                }
+
+                playButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleVideo();
+                });
+
+                card.addEventListener('click', function() {
+                    toggleVideo();
+                });
+
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', 'Play video ' + card.dataset.videoId);
+
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleVideo();
+                    }
+                });
+            });
+
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    videoCards.forEach(card => {
+                        const iframe = card.querySelector('iframe');
+                        iframe.src = '';
+                        card.classList.remove('playing');
+                    });
+                }
+            });
+        })();
+    </script>
+</body>

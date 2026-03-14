@@ -1,0 +1,232 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+    .Des-asso-section {
+        width: 100%;
+        box-sizing: border-box;
+        background-color: transparent;
+    }
+
+    .Des-asso-container {
+        display: flex;
+        gap: 30px;
+        max-width: 1460px; 
+        margin: 0 auto;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 20px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        cursor: grab;
+        user-select: none;
+        align-items: stretch;
+    }
+
+    .Des-asso-container.active {
+        cursor: grabbing;
+        scroll-snap-type: none;
+    }
+
+    .Des-asso-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .Des-asso-card {
+        position: relative;
+        flex: 0 0 407px;        
+        scroll-snap-align: start;
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        min-height: 374px;
+        z-index: 1;
+    }
+
+    .Des-asso-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+    }
+    
+    .Des-asso-bg path {
+        vector-effect: non-scaling-stroke;
+    }
+
+    .Des-asso-card-img-container {
+        width: 100%;
+        height: 132px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 21px;
+    }
+
+    .Des-asso-card-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        -webkit-user-drag: none;
+    }
+
+    .Des-asso-card-content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 0 37px 45px 32px;
+    }
+
+    .Des-asso-title {
+        font-family: 'Genova', sans-serif;
+        font-weight: 900;
+        font-size: 20px;
+        color: #000;
+        margin: 0;
+        margin-bottom: 10px;
+        line-height: 1.1;
+    }
+
+    .Des-asso-text {
+        font-family: 'Genova', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #000;
+        margin: 0;
+        line-height: 1.2;
+        flex-grow: 1;
+    }
+
+    .Des-asso-tags {
+        font-family: 'Genova', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: #000;
+        margin: 0;
+        line-height: 1.4;
+        margin-top: 20px;
+        white-space: pre-wrap;
+    }
+
+    @media (max-width: 1024px) {
+        .Des-asso-section {
+            padding: 40px 20px 20px 20px;
+        }
+
+        .Des-asso-card {
+            flex: 0 0 calc(50% - 15px);
+            width: calc(50% - 15px);
+            min-height: auto;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .Des-asso-card {
+            flex: 0 0 85%;
+            width: 85%;
+            scroll-snap-align: center;
+        }
+    }
+</style>
+
+<section class="Des-asso-section">
+    <div class="Des-asso-container">
+        <!-- Card 1 -->
+        <div class="Des-asso-card">
+            <svg class="Des-asso-bg" preserveAspectRatio="none" viewBox="0 0 407 374" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 373L292.004 373C293.515 373 295.003 372.62 296.328 371.894L325.755 355.772C327.375 354.885 329.193 354.419 331.04 354.419L397 354.419C401.971 354.419 406 350.389 406 345.419L406 9.99996C406 5.0294 401.971 0.999965 397 0.999965L9.99997 0.999999C5.02941 1 0.999968 5.02943 0.999968 10L0.999999 364C1 368.971 5.02944 373 10 373Z" fill="#FF9A00" fill-opacity="0.11" stroke="black" stroke-width="2"/>
+            </svg>
+            <div class="Des-asso-card-img-container">
+                <img src="https://nostalgear.fr/wp-content/uploads/2026/03/image-80.webp" alt="Studio Asgard">
+            </div>
+            <div class="Des-asso-card-content">
+                <h3 class="Des-asso-title">Association Studio Asgard</h3>
+                <p class="Des-asso-text">Studio Asgard est une association dédiée au développement de la culture gaming et e-sport en local. Passionnés, engagés et créatifs, leurs équipes font vivre la scène gaming à travers des événements uniques.</p>
+                <p class="Des-asso-tags">🎉 Geek and Chill Fest  •  🏆 Game de Oulph  •  
+🎮 Animations gaming pour salons, fêtes & événements</p>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="Des-asso-card">
+            <svg class="Des-asso-bg" preserveAspectRatio="none" viewBox="0 0 407 374" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 373L292.004 373C293.515 373 295.003 372.62 296.328 371.894L325.755 355.772C327.375 354.885 329.193 354.419 331.04 354.419L397 354.419C401.971 354.419 406 350.389 406 345.419L406 9.99996C406 5.0294 401.971 0.999965 397 0.999965L9.99997 0.999999C5.02941 1 0.999968 5.02943 0.999968 10L0.999999 364C1 368.971 5.02944 373 10 373Z" fill="#FF9A00" fill-opacity="0.11" stroke="black" stroke-width="2"/>
+            </svg>
+            <div class="Des-asso-card-img-container">
+                <img src="https://nostalgear.fr/wp-content/uploads/2026/03/image-81.webp" alt="USDEM 404">
+            </div>
+            <div class="Des-asso-card-content">
+                <h3 class="Des-asso-title">USDEM 404</h3>
+                <p class="Des-asso-text">Section numérique de l'association USDEM, présente dans le 95. Créateurs d'événements culturels et esportifs, ils oeuvrent pour rendre le gaming accessible à tous dans leur territoire.</p>
+                <p class="Des-asso-tags">🏅 Événements culturels  •  🎮 Compétitions esportives  •  📍 Val-d'Oise (95)</p>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="Des-asso-card">
+            <svg class="Des-asso-bg" preserveAspectRatio="none" viewBox="0 0 407 374" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 373L292.004 373C293.515 373 295.003 372.62 296.328 371.894L325.755 355.772C327.375 354.885 329.193 354.419 331.04 354.419L397 354.419C401.971 354.419 406 350.389 406 345.419L406 9.99996C406 5.0294 401.971 0.999965 397 0.999965L9.99997 0.999999C5.02941 1 0.999968 5.02943 0.999968 10L0.999999 364C1 368.971 5.02944 373 10 373Z" fill="#FF9A00" fill-opacity="0.11" stroke="black" stroke-width="2"/>
+            </svg>
+            <div class="Des-asso-card-img-container">
+                <img src="https://nostalgear.fr/wp-content/uploads/2026/03/image-82.webp" alt="FAMF">
+            </div>
+            <div class="Des-asso-card-content">
+                <h3 class="Des-asso-title">FAMF — Football Association Marseille Féminin</h3>
+                <p class="Des-asso-text">Parce que le sport et le gaming partagent les mêmes valeurs — passion, dépassement de soi, esprit d'équipe — NostalGear soutient la FAMF dans son engagement pour le sport féminin à Marseille.</p>
+                <p class="Des-asso-tags">⚽ Sport féminin  •  🏙️ Marseille  •  💪 Engagement & Inclusion</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function() {
+        function DesAssoInitDragScroll() {
+            const assoSlider = document.querySelector('.Des-asso-container');
+            if (!assoSlider) return;
+
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            assoSlider.addEventListener('dragstart', (e) => e.preventDefault());
+
+            assoSlider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                assoSlider.classList.add('active');
+                startX = e.pageX - assoSlider.offsetLeft;
+                scrollLeft = assoSlider.scrollLeft;
+            });
+
+            assoSlider.addEventListener('mouseleave', () => {
+                isDown = false;
+                assoSlider.classList.remove('active');
+            });
+
+            assoSlider.addEventListener('mouseup', () => {
+                isDown = false;
+                assoSlider.classList.remove('active');
+            });
+
+            assoSlider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - assoSlider.offsetLeft;
+                const walk = (x - startX) * 2;
+                assoSlider.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+             DesAssoInitDragScroll();
+        });
+        
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+             DesAssoInitDragScroll();
+        }
+    })();
+</script>
