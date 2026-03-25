@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Video Slider</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        .ttvs-container {
+            position: relative;
+            max-width: calc((298.38px * 4) + (17.27px * 3) + 160px); 
+            margin: 0 auto;
+            padding: 40px 0;
+            background-color: transparent;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .ttvs-gallery {
+            display: flex;
+            align-items: flex-start;
+            padding: 0 80px; 
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+            touch-action: pan-y; /* Allow vertical scroll, handle horizontal swipe via JS */
+        }
+
+        .ttvs-track {
+            display: flex;
+            gap: 16px;
+            transition: transform 0.5s ease-out; /* ease-out for snappier swipe feel */
+            will-change: transform;
+            cursor: grab;
+        }
+
+        .ttvs-track:active {
+            cursor: grabbing;
+        }
+
+        .ttvs-card {
+            display: flex;
+            flex-direction: column;
+            gap: 14.38px;
+            align-items: center;
+            flex-shrink: 0;
+            width: 298.38px;
+        }
+
+        .ttvs-video-wrapper {
+            position: relative;
+            width: 298.38px;
+            height: 518.97px;
+            -webkit-mask-image: url('https://nostalgear.fr/wp-content/uploads/2026/03/Mask-group-1.png');
+            mask-image: url('https://nostalgear.fr/wp-content/uploads/2026/03/Mask-group-1.png');
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+            -webkit-mask-position: center;
+            mask-position: center;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            background-color: #000;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .ttvs-video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .ttvs-play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+            z-index: 10;
+            transition: transform 0.2s;
+        }
+
+        .ttvs-video-wrapper:hover .ttvs-play-overlay {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .ttvs-play-overlay::before {
+            content: '';
+            display: block;
+            width: 0; 
+            height: 0; 
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid white; 
+            margin-left: 5px; 
+        }
+
+        .ttvs-user-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10.78px 43.14px;
+            border-radius: 59.32px;
+            width: 100%;
+            box-sizing: border-box;
+            background: transparent;
+            border: none;
+        }
+
+        .ttvs-user-name {
+            font-family: 'Roboto Mono', sans-serif;
+            font-size: 17.97px;
+            font-weight: 400;
+            line-height: normal;
+            color: #000;
+            text-transform: uppercase;
+            text-align: center;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        /* Nav Buttons */
+        .ttvs-nav-btn {
+            display: block; 
+            position: absolute;
+            top: calc(40px + 259.48px); 
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+            padding: 0;
+            pointer-events: auto !important; /* Ensure they are clickable */
+        }
+
+        .ttvs-nav-btn:hover, 
+        .ttvs-nav-btn:focus, 
+        .ttvs-nav-btn:active {
+            background: none !important;
+            outline: none;
+        }
+
+        .ttvs-nav-btn.prev { left: 10px; }
+        .ttvs-nav-btn.next { right: 10px; }
+
+        .ttvs-nav-btn svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .ttvs-nav-btn.prev svg { transform: rotate(-90deg); }
+        .ttvs-nav-btn.next svg { transform: rotate(90deg); }
+
+        /* Video Modal/Popup */
+        .ttvs-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .ttvs-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .ttvs-modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ttvs-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1000001;
+            transition: transform 0.2s;
+        }
+
+        .ttvs-close-btn:hover { transform: scale(1.1); }
+
+        .ttvs-close-btn::before,
+        .ttvs-close-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 3px;
+            background-color: #EA0F09;
+            transition: background-color 0.2s;
+        }
+
+        .ttvs-close-btn::before { transform: translate(-50%, -50%) rotate(45deg); }
+        .ttvs-close-btn::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+        .ttvs-close-btn:hover::before,
+        .ttvs-close-btn:hover::after { background-color: #fff; }
+
+        .ttvs-modal-video {
+            max-width: 100%;
+            max-height: 100%;
+            background-color: #000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .ttvs-nav-btn { display: none; }
+            .ttvs-container { padding: 30px 0; overflow: hidden; }
+            .ttvs-gallery { padding: 0 20px; overflow: hidden; }
+            .ttvs-card { width: 172.74px; gap: 8.33px; }
+            .ttvs-video-wrapper { width: 172.74px; height: 300.45px; }
+            .ttvs-user-pill { padding: 6.24px 24.98px; border-radius: 34.34px; border: 1.04px solid #000; }
+            .ttvs-user-name { font-size: 10.41px; }
+            .ttvs-play-overlay { width: 50px; height: 50px; }
+            .ttvs-play-overlay::before {
+                border-top: 8px solid transparent;
+                border-bottom: 8px solid transparent;
+                border-left: 14px solid white;
+                margin-left: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ttvs-container">
+        <!-- Previous Button -->
+        <button class="ttvs-nav-btn prev" id="ttvsPrevBtn" aria-label="Previous">
+            <svg width="103" height="105" viewBox="0 0 103 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="102.368" y="104.833" width="102.368" height="104.833" rx="51.184" transform="rotate(-180 102.368 104.833)" fill="#150603"/>
+                <path d="M47.7105 38.5296L40.769 38.5296L40.769 31.5853L47.7105 31.5853L47.7105 24.641L54.6548 24.641L54.6548 80.1927L47.7104 80.1927L47.7105 38.5296ZM54.6558 31.5853L61.5991 31.5853L61.5991 38.5296L54.6558 38.5296L54.6558 31.5853ZM61.5991 38.5296L68.5435 38.5296L68.5435 45.473L61.5991 45.473L61.5991 38.5296ZM33.8237 38.5296L40.7681 38.5296L40.7681 45.473L33.8237 45.473L33.8237 38.5296ZM68.5435 45.474L75.4878 45.474L75.4878 52.4173L68.5435 52.4173L68.5435 45.474ZM26.8794 45.474L33.8237 45.474L33.8237 52.4173L26.8794 52.4173L26.8794 45.474Z" fill="#F75200"/>
+            </svg>
+        </button>
+
+        <div class="ttvs-gallery" id="ttvsGallery">
+            <div class="ttvs-track" id="ttvsTrack">
+                <!-- Card 1 -->
+                <div class="ttvs-card">
+                    <div class="ttvs-video-wrapper" data-video-src="https://nostalgear.fr/wp-content/uploads/2026/02/AlvinBoulate-simple-client-tiktok.mp4">
+                        <video src="https://nostalgear.fr/wp-content/uploads/2026/02/AlvinBoulate-simple-client-tiktok.mp4#t=0.001" loop playsinline muted preload="metadata"></video>
+                        <div class="ttvs-play-overlay"></div>
+                    </div>
+                    <div class="ttvs-user-pill">
+                        <h3 class="ttvs-user-name">@AlvinBoulate</h3>
+                    </div>
+                </div>
+    
+                <!-- Card 2 -->
+                <div class="ttvs-card">
+                    <div class="ttvs-video-wrapper" data-video-src="https://nostalgear.fr/wp-content/uploads/2026/02/Q1Q1theredarrow-gagnant-concourt-tiktok-2.mp4">
+                        <video src="https://nostalgear.fr/wp-content/uploads/2026/02/Q1Q1theredarrow-gagnant-concourt-tiktok-2.mp4#t=0.001" loop playsinline muted preload="metadata"></video>
+                        <div class="ttvs-play-overlay"></div>
+                    </div>
+                    <div class="ttvs-user-pill">
+                        <h3 class="ttvs-user-name">@Q1Q1theredarrow</h3>
+                    </div>
+                </div>
+    
+                <!-- Card 3 -->
+                <div class="ttvs-card">
+                    <div class="ttvs-video-wrapper" data-video-src="https://nostalgear.fr/wp-content/uploads/2026/02/NeoVenloGaming-insta.mp4">
+                        <video src="https://nostalgear.fr/wp-content/uploads/2026/02/NeoVenloGaming-insta.mp4#t=0.001" loop playsinline muted preload="metadata"></video>
+                        <div class="ttvs-play-overlay"></div>
+                    </div>
+                    <div class="ttvs-user-pill">
+                        <h3 class="ttvs-user-name">@NeoVenloGaming</h3>
+                    </div>
+                </div>
+    
+                <!-- Card 4 -->
+                <div class="ttvs-card">
+                    <div class="ttvs-video-wrapper" data-video-src="https://nostalgear.fr/wp-content/uploads/2026/02/Zumlen-retroprojecteur-tiktok.mp4">
+                        <video src="https://nostalgear.fr/wp-content/uploads/2026/02/Zumlen-retroprojecteur-tiktok.mp4#t=0.001" loop playsinline muted preload="metadata"></video>
+                        <div class="ttvs-play-overlay"></div>
+                    </div>
+                    <div class="ttvs-user-pill">
+                        <h3 class="ttvs-user-name">@Zumlen</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Button -->
+        <button class="ttvs-nav-btn next" id="ttvsNextBtn" aria-label="Next">
+            <svg width="103" height="105" viewBox="0 0 103 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="102.368" y="104.833" width="102.368" height="104.833" rx="51.184" transform="rotate(-180 102.368 104.833)" fill="#150603"/>
+                <path d="M47.7105 38.5296L40.769 38.5296L40.769 31.5853L47.7105 31.5853L47.7105 24.641L54.6548 24.641L54.6548 80.1927L47.7104 80.1927L47.7105 38.5296ZM54.6558 31.5853L61.5991 31.5853L61.5991 38.5296L54.6558 38.5296L54.6558 31.5853ZM61.5991 38.5296L68.5435 38.5296L68.5435 45.473L61.5991 45.473L61.5991 38.5296ZM33.8237 38.5296L40.7681 38.5296L40.7681 45.473L33.8237 45.473L33.8237 38.5296ZM68.5435 45.474L75.4878 45.474L75.4878 52.4173L68.5435 52.4173L68.5435 45.474ZM26.8794 45.474L33.8237 45.474L33.8237 52.4173L26.8794 52.4173L26.8794 45.474Z" fill="#F75200"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Video Modal/Popup -->
+    <div class="ttvs-modal" id="ttvsVideoModal">
+        <div class="ttvs-modal-content">
+            <button class="ttvs-close-btn" id="ttvsCloseBtn" aria-label="Close video"></button>
+            <video 
+                class="ttvs-modal-video" 
+                id="ttvsModalVideo"
+                controls
+                playsinline
+            >
+                <!-- source injected via JS -->
+            </video>
+        </div>
+    </div>
+    <!-- Consolidated Logic (Infinite Loop + Swipe + Modal) -->
+    <script>
+        (function() {
+            'use strict';
+            
+            // Elements
+            const container = document.querySelector('.ttvs-container');
+            const track = document.getElementById('ttvsTrack');
+            const prevBtn = document.getElementById('ttvsPrevBtn');
+            const nextBtn = document.getElementById('ttvsNextBtn');
+            const modal = document.getElementById('ttvsVideoModal');
+            const closeBtn = document.getElementById('ttvsCloseBtn');
+            const modalVideo = document.getElementById('ttvsModalVideo');
+            const cards = Array.from(track.querySelectorAll('.ttvs-card'));
+            
+            if (!track || !cards.length) return;
+
+            // Slider Configuration
+            let cardWidth = cards[0].offsetWidth;
+            let gap = 17.27; 
+            let cardTotalWidth = cardWidth + gap;
+            let currentIndex = cards.length; 
+            let isTransitioning = false;
+
+            // Swipe/Pointer Interaction State
+            let isDragging = false;
+            let startX = 0;
+            let currentX = 0;
+            let startTranslate = 0;
+            let dragThreshold = 50; 
+            let movedDistance = 0;
+            let wasDragged = false;
+
+            // 1. Clone cards for infinite loop
+            const clonesBefore = cards.map(card => card.cloneNode(true));
+            const clonesAfter = cards.map(card => card.cloneNode(true));
+            clonesBefore.forEach(clone => track.insertBefore(clone, track.firstChild));
+            clonesAfter.forEach(clone => track.appendChild(clone));
+
+            // 2. Position updates
+            const updatePosition = (animate = true, transformX = null) => {
+                track.style.transition = animate ? 'transform 0.5s ease-out' : 'none';
+                const x = transformX !== null ? transformX : -currentIndex * cardTotalWidth;
+                track.style.transform = `translateX(${x}px)`;
+            };
+
+            updatePosition(false);
+
+            // 3. Movement logic
+            const moveSlider = (direction) => {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                if (direction === 'next') currentIndex++;
+                else currentIndex--;
+                updatePosition(true);
+            };
+
+            // 4. Seamless Loop Jump
+            track.addEventListener('transitionend', () => {
+                isTransitioning = false;
+                if (currentIndex >= cards.length * 2) {
+                    currentIndex = cards.length;
+                    updatePosition(false);
+                } else if (currentIndex < cards.length) {
+                    currentIndex = cards.length * 2 - 1;
+                    updatePosition(false);
+                }
+            });
+
+            // 5. Navigation Buttons
+            if (prevBtn) prevBtn.addEventListener('click', (e) => { e.preventDefault(); moveSlider('prev'); });
+            if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); moveSlider('next'); });
+
+            // 6. Swipe/Drag Implementation
+            const onStart = (e) => {
+                if (isTransitioning) return;
+                isDragging = true;
+                wasDragged = false;
+                startX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+                startTranslate = -currentIndex * cardTotalWidth;
+                track.style.transition = 'none';
+                currentX = startX;
+            };
+
+            const onMove = (e) => {
+                if (!isDragging) return;
+                currentX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+                const diff = currentX - startX;
+                movedDistance = Math.abs(diff);
+                if (movedDistance > 5) {
+                    wasDragged = true;
+                }
+                updatePosition(false, startTranslate + diff);
+            };
+
+            const onEnd = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                const diff = currentX - startX;
+                
+                if (Math.abs(diff) > dragThreshold) {
+                    if (diff > 0) moveSlider('prev');
+                    else moveSlider('next');
+                } else {
+                    updatePosition(true);
+                }
+                
+                // Keep 'wasDragged' true for a split second to block the click event
+                setTimeout(() => { wasDragged = false; }, 50);
+            };
+
+            track.addEventListener('mousedown', onStart);
+            track.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+            track.addEventListener('touchstart', onStart, { passive: true });
+            track.addEventListener('touchmove', onMove, { passive: true });
+            track.addEventListener('touchend', onEnd);
+            track.addEventListener('dragstart', (e) => e.preventDefault());
+
+            // 7. Modal Logic
+            function openModal(videoSrc) {
+                if (!modal || !modalVideo) return;
+                modalVideo.src = videoSrc;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                modalVideo.play().catch(() => {});
+            }
+
+            function closeModal() {
+                if (!modal || !modalVideo) return;
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                modalVideo.pause();
+                modalVideo.src = '';
+            }
+
+            // Click listener on track to handle modal opening
+            track.addEventListener('click', (e) => {
+                if (wasDragged) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                
+                const wrapper = e.target.closest('.ttvs-video-wrapper');
+                if (wrapper) {
+                    const src = wrapper.getAttribute('data-video-src');
+                    if (src) openModal(src);
+                }
+            }, true); // Use capture to block internal clicks if needed
+
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+            // 8. Resize Handling
+            window.addEventListener('resize', () => {
+                cardWidth = cards[0].offsetWidth;
+                cardTotalWidth = cardWidth + gap;
+                updatePosition(false);
+            });
+        })();
+    </script>
+</body>
+</html>
