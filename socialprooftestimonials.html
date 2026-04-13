@@ -1,0 +1,1453 @@
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        .Des-nr-section {
+            width: 100%;
+            box-sizing: border-box;
+            background-color: transparent;
+        }
+
+        .Des-nr-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1460px; 
+            margin: 0 auto;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            cursor: grab;
+            user-select: none;
+            align-items: flex-start;
+        }
+
+        .Des-nr-container.active {
+            cursor: grabbing;
+            scroll-snap-type: none;
+        }
+
+        .Des-nr-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .Des-nr-card {
+            position: relative;
+            flex: 0 0 400px;        
+            scroll-snap-align: start;
+            width: auto;
+            border-radius: 13px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 32px;
+            box-sizing: border-box;
+            color: #000;
+            background-image: url('https://nostalgear.fr/wp-content/uploads/2026/03/Rectangle-32.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 390px;
+            height: auto;
+            transition: all 0.3s ease;
+        }
+
+
+        .Des-nr-card-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            height: 100%;
+        }
+
+        .Des-nr-card-header {
+            display: flex;
+            align-items: center;
+            gap: 38px;
+        }
+
+        .Des-nr-avatar {
+            width: 116px;
+            height: 116px;
+            border-radius: 7px !important;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .Des-nr-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            -webkit-user-drag: none;
+        }
+
+        /* Modal Styles */
+        .Des-nr-modal {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .Des-nr-modal-content {
+            margin: auto;
+            display: block;
+            width: auto;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .Des-nr-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .Des-nr-modal-close:hover,
+        .Des-nr-modal-close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .Des-nr-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .Des-nr-user-name {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .Des-nr-stars {
+            display: flex;
+            gap: 5px;
+        }
+
+        .Des-nr-stars-img {
+            /*height: px !important;*/
+            width: 156px !important;
+            display: block;
+        }
+
+        .Des-nr-review-body {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .Des-nr-quote-icon {
+           font-size: 60px;
+           line-height: 1;
+           font-family: serif;
+           margin-bottom: -20px;
+           display: block;
+        }
+        
+        .Des-nr-quote-img {
+            width: 26px;
+            height: 21px;
+            display: block;
+        }
+
+        .Des-nr-review-text {
+            font-family: 'Genova', sans-serif;
+            font-size: 20px;
+            line-height: 1.2;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: max-height 0.3s ease;
+        }
+
+        .Des-nr-card.expanded {
+            height: auto !important;
+        }
+
+        .Des-nr-card.expanded .Des-nr-review-text {
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+        }
+
+        .Des-nr-read-more-btn {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            cursor: pointer;
+            margin-top: auto;
+            padding-top: 0;
+            align-self: flex-end;
+            width: 100%;
+        }
+
+        .Des-nr-read-more-text {
+            color: #f75200;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+        }
+
+        .Des-nr-card.expanded .Des-nr-read-more-icon {
+            transform: rotate(180deg);
+        }
+
+        .Des-nr-read-more-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .Des-nr-read-more-icon svg {
+             width: 100%;
+             height: 100%;
+        }
+        
+        @media (max-width: 1024px) {
+            .Des-nr-section {
+                padding: 40px 0px 20px 20px;
+            }
+
+            .Des-nr-container {
+                display: flex;
+                grid-template-columns: unset;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                gap: 20px;
+                padding-bottom: 20px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .Des-nr-container::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .Des-nr-card {
+                flex: 0 0 calc(50% - 10px);
+                width: calc(50% - 10px);
+                scroll-snap-align: start;
+                height: auto;
+                min-height: 352px;
+                margin-right: 0;
+                padding: 24px;
+                padding-bottom: 40px;
+                align-self: flex-start;
+            }
+
+            .Des-nr-card-header {
+                flex-direction: row;
+                align-items: center;
+                text-align: left;
+                gap: 20px;
+                width: 100%;
+                margin-bottom: 0px;
+                flex-shrink: 0;
+            }
+
+            .Des-nr-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .Des-nr-user-info {
+                align-items: flex-start;
+                width: auto;
+                flex: 1;
+            }
+
+            .Des-nr-user-name {
+                font-size: 20px;
+                white-space: normal;
+                line-height: 1.2;
+            }
+
+            .Des-nr-stars-img {
+                height: 20px;
+                width: auto !important;
+            }
+            
+            .Des-nr-card-content {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                gap: 20px;
+            }
+
+            .Des-nr-review-body {
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .Des-nr-card {
+                flex: 0 0 85%;
+                width: 85%;
+                scroll-snap-align: center;
+                min-height: 352px;
+            }
+        }
+    </style>
+
+<section class="Des-nr-section">
+    <div class="Des-nr-container">
+        <!-- Card 1 -->
+        <div class="Des-nr-card">
+
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <!-- Placeholder Avatar -->
+                        <img src="https://nostalgear.fr/wp-content/uploads/2026/04/Laurent-Murzilli.avif" alt="Laurent Murzilli">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Laurent Murzilli</h3>
+                        <div class="Des-nr-stars">
+                             <!-- 5 Stars Image -->
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+Manette répond vraiment bien a touts style de jeux testé vraiment content de mon achat 👍 </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="Des-nr-card">
+
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1763905558__1763905553906-17639055337592478699331262__original.jpg" alt="Fabien R.">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">trufil95</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Trop bien           </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="Des-nr-card">
+
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1738241549__1738241541295-eb1c87c8-7526-4ceb-a1b1-81__original.jpeg" alt="Germain D.">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Lucas Willkomm</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Console bien reçue le 27/01/2025 :
+
+J’ai pris le pack « escouade » avec les 4 manettes.
+
+Le packaging est top, tout est bien emballé et protégé !
+
+Les manettes sont réactives et fonctionnent parfaitement.
+
+Le menu et l’interface de la console est super bien fait avec de beaux fans arts et de musiques sur le thème du jeux video.
+Tous les jeux sont déjà scrapés avec la jaquette ce qui procure vraiment cet effet « collection »
+
+Mais le plus impressionnant sur cette GearMaster, c’est vraiment la qualité de l’émulation des différents systèmes.
+
+Toutes les consoles 3D comme la PS1, PSP, Dreamcast, N64, Saturn (oui même la Saturn) etc.. tournent à merveille sur ce petit boitier.
+
+Vous pouvez y aller les yeux fermés.
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Des-nr-card">
+
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <!-- Placeholder Avatar -->
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1737121715__1737121710010-img_6365__original.jpeg" alt="Germain D.">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">FLORIAN BARONE</h3>
+                        <div class="Des-nr-stars">
+                             <!-- 5 Stars Image -->
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+Je me permets d’écrire un avis déjà pour remercier le président de la société car après un petit problème qui a été résolu rapidement ,j’ai reçu ma console en très bon état de marche, ce qui est incroyable c’est que l’on retombe directement dans notre enfance car les jeux sont de très bonne qualité ,la console ne prend pas trop de place ,elle est très discrète et il y a de quoi faire .
+Il faut savoir dire quand une société est fiable et je confirme que la société nostal gear et totalement fiable
+Merci encore pour votre suivi
+Mérite 5 étoiles et plus⭐️⭐️⭐️⭐️⭐️⭐️ </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="Des-nr-card">
+
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1740582917__1000022178__original.jpg" alt="Fabien R.">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Loïc Lenarduzzi</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Beaucoup de jeux, en français et fluide. Certes c'est un investissement, mais cela en vaut la peine !                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="Des-nr-card">
+
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1741280065__1741280055504-img_20250306_174436__original.jpg" alt="Germain D.">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Mickaël Fougeray</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Salut à tous, je souhaite signaler que la console fonctionne super bien. Je l'ai reçu dans le délai de livraison estimée (la console et les 4 manettes) et j'étais super heureux de la recevoir. Je passe mon temps à rejouer à de vieux jeux pokémon ça me rend tellement nostalgique 🤩
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1743413443__1743413427737-20250331_112912__original.jpg" alt="Leniere Vincent">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Leniere Vincent</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Super de jouer à des jeux vidéos enfances merci nostalgear
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1747821629__1747821624254-20250514_154608__original.jpg" alt="gilles lambotte">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">gilles lambotte</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Produit conforme par rapport à la description très facile à jouer très maniable plus qu'à attendre la nouvelle manette pro qui est en rupture de stock et du coup ils m'ont dit qu'il m'enverrait la manette dès qu'ils ont reçu le stock encore merci pour tout
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+         <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1753134908__1753134880920-pxl_20250721_214927122mp__original.jpg" alt="Anthony LE">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Anthony LE</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Très bonne console rétro !!
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1734306966__1734306933855-1b175700-5fb2-4b91-87b1-49__original.jpeg" alt="Arnaud Masot">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Arnaud Masot</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Bonjour, arrivé dans les délais je suis très content de la console pour faire découvrir à mon fiston les jeux Mario et autres et pour moi un retour en enfance. je recommande la console 👍🎮
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1752747473__1752747453598-20250717_121025__original.jpg" alt="Aurelien">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Aurelien</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Bonjour merci beaucoup je retrouve mon enfance avec les jeux playstation surtout c'est génial encore bravo 👌👏
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1759858799__1759858783996-img_1852__original.jpg" alt="Aurelien Dubois">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Aurelien Dubois</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Pour l'instant, je n'ai fait qu'essayer la machine mais elle semble bien fonctionner. Après avoir bien pris en main la navigation dans le menu, et après avoir retenu les quelques raccourcis et manipulations à connaître je pense que mes enfants et moi même allons bien nous amuser.
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 10 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1738615884__1738615879640-17386158205487409935135689__original.jpg" alt="BEAUVIER Charles">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">BEAUVIER Charles</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        "Merci pour ce retour en enfance... Une très bonne console avec un choix énorme... Merci aussi pour votre écoute et votre professionnalisme. Je recommande cette console."
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 11 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1753169201__1753169197089-1000008133__original.jpg" alt="christopher">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">christopher</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Une merveille, très bonne console, j'ai pu tester différentes plateformes tout fonctionne correctement, interface bien clair, la console même après des heures ne chauffe pas, si vous rêver de nostalgie cette console est faite pour vous ou simplement découvrir les jeux auquel vous n'avez pas pu jouer.
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 12 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1745427941__1745427603911-img_20250423_185058__original.jpg" alt="Damien De sa fernandez">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Damien De sa fernandez</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        "Je vous remercie pour la console, elle est énorme !! Tous les jeux pratiquement sont en français, il y a une super optimisation. Je suis reparti en enfance mais en qualité HD, même sur une télé de 130 cm le rendu est incroyable. Je pensais pas que j'allais pouvoir revivre mon enfance avec une qualité graphique aussi bonne."
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 13 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1757530489__1757530471150-17575304199311622049549732__original.jpg" alt="francois devey">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">francois devey</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Super expérience ! Je retrouve les jeux de mon enfance 🤗. Merci Nostalgear !!
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 14 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1733947882__1733947864666-screenshot_20241211_211051__original.jpg" alt="Frantz Manon">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Frantz Manon</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        La première fois que j'en n'est entendu parler je me suis dit c'est trop beau pour être vrai allor mon frère en a commendes 2 pour qu'on sois fixé et le résultat à êtes plus que concluant comment une si petite machine peut faire tourner auten de jeux avec de si jolie graphismes un grand merci à NostalGear
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 15 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1750317010__streetofrage__original.jpg" alt="Frederic Peuillon">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Frederic Peuillon</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        "le produit correspond à ce que j'ai commandé, il y a quelqu'un au bout du fil, quand tu faits une remarque on te réponds, c'est pas incroyable ça ??? c'est vraiment top, allez y.......! pour le reste tout est ok, la console tourne parfaitement, c'est fluide et la promesse de nostalgie est tenue, bravo."
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 16 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1757525151__1757525146403-17575251012087877796066255__original.jpg" alt="gabriel condette">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">gabriel condette</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        "La console est top pour le moment et tiens ses promesses c'est vraiment sympa de pouvoir retrouver tous les jeux de son enfance sur GBA et PS1 ! Les quelques points négatif: Impossible d'éteindre la console a distance avec la manette. On s'y fait mais c'est un retour en arrière ! On ne peut hélas pas chercher jeux par genres style RPG etc.... Quelque freeze sur sky of Arcadia mais vue que c'est un jeu tour par tour pas trop dérangeant ! En tout cas c'est top j'espère une version 2.0 d'ici un an ou deux avec la PS2 GameCube et 3DS ! :)"
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 17 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1752316685__1752316668438-17523166543164923076092391__original.jpg" alt="james">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">james</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Superbe console ayant déjà eu hyperspin je préfère de loin ce système manettes un peu cheap j'ai du racheter une manette gamesir bonne continuation a l'équipe
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 18 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1745952267__1745952114764-img_20250419_183108__original.jpg" alt="Jean Baptiste Van Brabandt">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Jean Baptiste Van Brabandt</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        "Avec 20 000 jeux et 70 consoles pris en charge, c'est une excellente option pour les amateurs de rétro gaming. Les prix autour de 220 € sont raisonnables compte tenu de la quantité de contenu disponible. Il est vrai que l'absence de certaines consoles emblématiques comme la PS2, la GameCube et la Xbox peut être un inconvénient pour certains joueurs qui souhaitent une expérience complète. Cependant, pour ceux qui veulent revivre des classiques et explorer d'autres jeux rétro, cela reste une très bonne option. N'hésite pas à te lancer si tu es passionné de jeux rétro ! C’est une belle addition à une collection de gaming."
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 19 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1754160947__1754160939035-20250723_173737__original.jpg" alt="jeremy">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">jeremy</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Super console 2 ou 3 truc à améliorer mais vraiment super replonger en enfance avec des jeux inoubliable je recommande la console à tout le monde hésitez pas à acheter on est vraiment ravis je ferais la pub sans aucun problème si on me le demanderais j'ai déjà recommander des amis et la famille d'acheter ils sont ravis franchement n'hésitez pas il n'y a pas d'arnaque
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 20 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1734307111__1734307092468-04b48ab1-3b57-4f48-997f-f3__original.jpeg" alt="Laurent Pacelli">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Laurent Pacelli</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Franchement cette console est trop trop bien je recommande vraiment et envoie très rapide.
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 21 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1734306842__1734306826426-462586867_2274517806274917__original.jpg" alt="Medhi Benkassem">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Medhi Benkassem</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Console fantastique, littéralement plug and play. Tous mes jeux favoris dessus et il y à tellement de choix ! C'est incroyable de revivre mon enfance with these jeux !
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 22 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1740574365__1740574284831-20250226_134541__original.jpg" alt="Raphael vaguet">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Raphael vaguet</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Reçu il y a une semaine. Présentation, déroulement des différents jeux et consoles soignés. On retourne en enfance avec des jeux mythiques. Le SAV est présent et rapide suite à un petit bug sans gravité. Je recommande vraiment.
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 23 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1734306619__1734306592108-462553102_1995308897547910__original.jpg" alt="Rayan barois">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Rayan barois</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Très bon rapport qualité prix! Facile à utiliser et a assez de portée pour jouer depuis le canapé.
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 24 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1741004010__img_1213__original.JPG" alt="Thierry Laurens">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Thierry Laurens</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Ravi d'avoir enfin trouvé une console rétro gaming qui fait son job . 
+Largement un cran au-dessus de la time machine , tout les jeux testés on fonctionnés plus du double en jeux par rapport à la time machine .
+Des jeux en français.
+Tout y est pour passer des heures de jeux .
+voilà ma gearmaster posée sur la time machine qui me sert de support derrière la tv ( un peu cher pour un support )
+le gearmaster ne chauffe pas elle est très bien ventilée .
+pour les rageux youtubeurs qui critiquent un produit qu'ils n'ont même pas essayé ( on peu plus rien pour eux...... )
+Je me répète encore mais toute la famille est ravie avec la GearMaster !!!!
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 25 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1733923489__1733923486373-1000013651__original.jpg" alt="Tristan Breban">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Tristan Breban</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        La Gear Master est une super console rétro qui te ramènes dans l'enfance en pleine nostalgie avec 70 console 20k de jeux l'interface d'acceuil est super bien présenter avec les clasics de licences comme Pokemon,Mario, sonic, Rayman, Tomb Raider, Mk. Tekken et j'en passes ce qui donnent envie d'y jouer et de découvrir pleins d'ancienne pépites ainsi que des fan -game pokemon, Mario etcs fait par des dans et sa c'est vraiment génial! 
+J'ai fini l'aventure de pokemon heart gold très rapidement (il y'a les cheats codes masterball attrapé en une seul fois voler aux dresseurs, etc et c'est bien pour tryhard le Pokédex) en bref j'me suis bien amusé dessus et je vous la conseille! 🐧🔥
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 26 -->
+        <div class="Des-nr-card">
+            <div class="Des-nr-card-content">
+                <div class="Des-nr-card-header">
+                    <div class="Des-nr-avatar">
+                        <img src="https://s3.amazonaws.com/me.judge.review-images/nostalgear-retrogaming/1753005746__1753005735978-20250720_115759__original.jpg" alt="Valentin">
+                    </div>
+                    <div class="Des-nr-user-info">
+                        <h3 class="Des-nr-user-name">Valentin</h3>
+                        <div class="Des-nr-stars">
+                             <img src="https://nostalgear.fr/wp-content/uploads/2026/03/Frame-18-scaled-1.png" alt="5 stars" class="Des-nr-stars-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="Des-nr-review-body">
+                    <svg class="Des-nr-quote-img" width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 21.06V12.44C0 6.6 4.2 1.48 10.2 0L12.04 3.76C8.6 4.6 6.32 7.08 5.72 10.4H11.2V21.06H0ZM13.84 21.06V12.44C13.84 6.6 18.04 1.48 24.04 0L25.88 3.76C22.44 4.6 20.16 7.08 19.56 10.4H25.04V21.06H13.84Z" fill="black"/>
+                    </svg>
+                    <p class="Des-nr-review-text">
+                        Sceptique au début sur ce que ça allait donner, au final très content de la console. En 1 semaine jour pour jour je l'ai reçue après commande. Facilité d'utilisation notamment avec les tutos sur YouTube de l'équipe. Et une réactivité de l'équipe pour nous répondre quand on a des questions. La console est fidèle à sa promesse: beaucoup de jeux et de consoles en 1 seule with des jeux en français pour une majorité rien à redire !
+                    </p>
+                    <div class="Des-nr-read-more-btn" onclick="DesNrToggleReview(this)">
+                        <span class="Des-nr-read-more-text">Avis</span>
+                        <div class="Des-nr-read-more-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="13.8965" height="13.8965" transform="matrix(0 1 1 0 0 0)" fill="#F75200"/>
+                                <path d="M12.1594 8.10628L11.3343 7.28117L9.26433 9.36565V2.8951H2.31609V4.05314H8.10629V9.36565L6.02181 7.28117L5.19671 8.0918L8.68531 11.5804L12.1594 8.10628Z" fill="#E3E3E3"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- The Modal -->
+        <div id="DesNrModalResp" class="Des-nr-modal">
+          <span class="Des-nr-modal-close">&times;</span>
+          <img class="Des-nr-modal-content" id="DesNrModalImgResp">
+        </div>
+
+<script>
+    (function() {
+        function DesNrToggleReview(button) {
+            const card = button.closest('.Des-nr-card');
+            card.classList.toggle('expanded');
+        }
+        window.DesNrToggleReview = DesNrToggleReview;
+
+        function DesNrCheckOverflow() {
+            const texts = document.querySelectorAll('.Des-nr-review-text');
+            texts.forEach(text => {
+                const btn = text.parentElement.querySelector('.Des-nr-read-more-btn');
+                if (btn) {
+                    if (text.scrollHeight > text.clientHeight + 1) {
+                        btn.style.display = 'flex';
+                    } else {
+                        btn.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function DesNrInitDragScroll() {
+            const nrSlider = document.querySelector('.Des-nr-container');
+            if (!nrSlider) return;
+
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            nrSlider.addEventListener('dragstart', (e) => e.preventDefault());
+
+            nrSlider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                nrSlider.classList.add('active');
+                startX = e.pageX - nrSlider.offsetLeft;
+                scrollLeft = nrSlider.scrollLeft;
+            });
+
+            nrSlider.addEventListener('mouseleave', () => {
+                isDown = false;
+                nrSlider.classList.remove('active');
+            });
+
+            nrSlider.addEventListener('mouseup', () => {
+                isDown = false;
+                nrSlider.classList.remove('active');
+            });
+
+            nrSlider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - nrSlider.offsetLeft;
+                const walk = (x - startX) * 2;
+                nrSlider.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        function DesNrInitModal() {
+            const modal = document.getElementById("DesNrModalResp");
+            const modalImg = document.getElementById("DesNrModalImgResp");
+            const closeBtn = document.querySelector(".Des-nr-modal-close");
+            const avatars = document.querySelectorAll('.Des-nr-avatar img');
+
+            if (!modal || !modalImg || !closeBtn) return;
+
+            avatars.forEach(img => {
+                img.addEventListener('click', function(e) {
+                    modal.style.display = "flex";
+                    modalImg.src = this.src;
+                });
+            });
+
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+             DesNrCheckOverflow();
+             DesNrInitDragScroll();
+             DesNrInitModal();
+        });
+        
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+             DesNrCheckOverflow();
+             DesNrInitDragScroll();
+             DesNrInitModal();
+        }
+        
+        window.addEventListener('load', () => {
+             DesNrCheckOverflow();
+             DesNrInitModal();
+        });
+        window.addEventListener('resize', DesNrCheckOverflow);
+    })();
+</script>
